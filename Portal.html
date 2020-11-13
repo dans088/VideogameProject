@@ -39,7 +39,7 @@
         vec2 translation = texCoord + vec2(1, 1) * time * 0.5; 
 		
 		translation.x += cos(noise.r* 3.141592654/180.0);
-		translation.y -= sin(noise.g* 3.141592654/180.0);
+		translation.y -= noise.g;
 		
 		vec4 color = texture2D( glowTexture, translation);
 

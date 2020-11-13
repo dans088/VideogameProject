@@ -25,7 +25,7 @@ function run() {
     // Render the scene
     renderer.render( scene, camera );
 
-    // Spin the whole solar system
+    // Spin 
     animate();
 
     // Update the camera controller

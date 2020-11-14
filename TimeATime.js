@@ -1,10 +1,17 @@
+let keysDown = {
+    "a":false,
+    "d":false,
+    "ArrowLeft":false,
+    "ArrowRight":false,
+    "Spacebar":false
+};
+
 class Ghost
 {
-    constructor(Object3D, x, y, speed = 2)
+    constructor(Object3D, position, speed = 2)
     {
         this.Object3D = Object3D;
-        this.x = x;
-        this.y = y;
+        this.Object3D.position.set(0,0,0);
         this.speed = speed;
     }
 
@@ -14,11 +21,22 @@ class Ghost
     }
 
     //receive translation matrix
-    move(up, down, left, right)
+    moveLeft()
     {
-        //add event listeners
+        this.Object3D.position.x -= this.speed;
     }
 
+    moveRight()
+    {
+        this.Object3D.position.x += this.speed;
+    }
+
+    update(){
+        if(keysDown["a"] || keysDown["ArrowLeft"])
+            this.moveLeft()
+        if(keysDown["d"] || keysDown["ArrowRight"])
+            this.moveRight()
+    }
 }
 
 
@@ -28,6 +46,7 @@ scene = null,
 camera = null,
 uniforms = null,
 orbitControls = null;
+ghost = null;
 
 let duration = 5000; // ms
 let currentTime = Date.now();
@@ -39,7 +58,7 @@ function animate()
     currentTime = now;
     let fract = deltat / duration;
    
-    uniforms.time.value += fract;
+    //uniforms.time.value += fract;
 
 }
 
@@ -50,14 +69,15 @@ function run() {
     // Render the scene
     renderer.render( scene, camera );
 
-    // Spin
-    animate();
-
     // Update the camera controller
     orbitControls.update();
 
+    // Spin
+    animate();
+
 }
-    
+
+
 function scene_setup(canvas)
 {
     console.log(THREE.REVISION);
@@ -76,6 +96,9 @@ function scene_setup(canvas)
     camera.position.set(0, 2, -8);
     scene.add(camera);
 
+    //initiate orbitcontroller
+    orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+
     // Add light
     // Add a directional light to show off the object
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
@@ -84,7 +107,6 @@ function scene_setup(canvas)
     scene.add(directionalLight);
 
     load_ghost();
-
     /*
     Portals = new THREE.Object3D();
 
@@ -94,10 +116,20 @@ function scene_setup(canvas)
 
     */
 
-    //initiate orbitcontroller
-    orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 
 }
+
+function keyEvents(){
+
+    document.addEventListener("keyup", event=>{
+        keysDown[event.key] = false;
+    });
+       
+    document.addEventListener("keydown", event=>{
+        keysDown[event.key] = true;
+    }); 
+} 
+
 
 function promisifyLoader ( loader, onProgress ) 
 {
@@ -121,7 +153,12 @@ function load_ghost()
     let box_geometry = new THREE.BoxGeometry(1, 1, 1);
     let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
     let cube = new THREE.Mesh(box_geometry, material);
-    scene.add( cube );
+    
+    position = new THREE.Vector3( 0, 0, 0 );
+
+    ghost = new Ghost(cube, position, 2);
+
+    scene.add(ghost.Object3D);
 }
 
 function create_portal()

@@ -3,19 +3,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Time after Time</title>
 
-<link rel="stylesheet" href="jquery-ui/jquery-ui.css" />
-<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="libs/jquery-ui/jquery-ui.css" />
 <link rel="stylesheet" href="css/threejslights.css" />
 <link rel="stylesheet" href="css/threejsshaders.css" />
 
-<script src="jquery-3.4.1/jquery-3.4.1.min.js"></script>
-<script src="jquery-ui/jquery-ui.js"></script>
+<script src="libs/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="libs/jquery-ui/jquery-ui.js"></script>
 
-<script src="three.js/three.js"></script>
-<script src="three.js/controls/OrbitControls.js"></script>
+<script src="libs/three.js/three.js"></script>
+<script src="libs/three.js/controls/OrbitControls.js"></script>
 
-<script src="Portal.js"></script>
-<script src="sceneHandlers.js"></script>
+<script src="TimeATime.js"></script>
+<!--script src="sceneHandlers.js"></script-->
 
 <script id="fragmentShader" type="x-shader/x-fragment">
 
@@ -72,7 +71,7 @@
 			function() {
 				let canvas = document.getElementById("webglcanvas");
                 
-                scene_setup(canvas);
+				scene_setup(canvas);
 
 				// Run the run loop
 				run();

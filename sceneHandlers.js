@@ -47,6 +47,6 @@ function addMouseHandler(canvas, group)
     canvas.addEventListener( 'mousemove', e => onMouseMove(e, group), false);
     canvas.addEventListener( 'mousedown', e => onMouseDown(e), false );
     canvas.addEventListener( 'mouseup',  e => onMouseUp(e), false );
-
+    
     $("#slider").on("slide", (e, u) => scaleScene(u.value, group));
 }

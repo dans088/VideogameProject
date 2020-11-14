@@ -1,3 +1,5 @@
+
+//Movement keys
 let keysDown = {
     "a":false,
     "d":false,
@@ -6,12 +8,12 @@ let keysDown = {
     "Spacebar":false
 };
 
+//Class for the character that the player controls
 class Ghost
 {
-    constructor(Object3D, position, speed = 2)
+    constructor(mesh, speed = 0.1)
     {
-        this.Object3D = Object3D;
-        this.Object3D.position.set(0,0,0);
+        this.mesh = mesh;
         this.speed = speed;
     }
 
@@ -23,12 +25,18 @@ class Ghost
     //receive translation matrix
     moveLeft()
     {
-        this.Object3D.position.x -= this.speed;
+        console.log("Moveleft");
+        this.mesh.position.x -= this.speed;
     }
 
     moveRight()
     {
-        this.Object3D.position.x += this.speed;
+        console.log("Moveright");
+        this.mesh.position.x += this.speed;
+    }
+
+    jump(){
+        //JUMP
     }
 
     update(){
@@ -36,10 +44,10 @@ class Ghost
             this.moveLeft()
         if(keysDown["d"] || keysDown["ArrowRight"])
             this.moveRight()
+        if(keysDown["Spacebar"])
+            this.jump()
     }
 }
-
-
 
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
@@ -47,6 +55,7 @@ camera = null,
 uniforms = null,
 orbitControls = null;
 ghost = null;
+canvas = null;
 
 let duration = 5000; // ms
 let currentTime = Date.now();
@@ -69,8 +78,7 @@ function run() {
     // Render the scene
     renderer.render( scene, camera );
 
-    // Update the camera controller
-    orbitControls.update();
+    ghost.update();
 
     // Spin
     animate();
@@ -80,24 +88,20 @@ function run() {
 
 function scene_setup(canvas)
 {
-    console.log(THREE.REVISION);
 
-    // Create the Three.js renderer and attach it to our canvas. Different renderes can be used, for example to a 2D canvas.
+    // Create the Three.js renderer and attach it to our canvas
     renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true } );
 
-    // Set the viewport size.
+    // Set the viewport size
     renderer.setSize(canvas.width, canvas.height);
 
-    // Create a new Three.js scene.
-    scene = new THREE.Scene();
-    
-    // Add  a camera so we can view the scene. Three js uses these values to create a projection matrix.
-    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 40 );
-    camera.position.set(0, 2, -8);
-    scene.add(camera);
+    // Turn on shadows
+    renderer.shadowMap.enabled = true;
+    // Options are THREE.BasicShadowMap, THREE.PCFShadowMap, PCFSoftShadowMap
+    renderer.shadowMap.type = THREE.BasicShadowMap;
 
-    //initiate orbitcontroller
-    orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    // Create a new Three.js scene
+    scene = new THREE.Scene();
 
     // Add light
     // Add a directional light to show off the object
@@ -106,16 +110,35 @@ function scene_setup(canvas)
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
+    keyEvents();
+
     load_ghost();
+
+    pivot = new THREE.Object3D;
+
+    //Create a pivot and add it to the mesh of the player
+    ghost.mesh.add(pivot);
+
+    // Add  a camera so we can view the scene
+    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
+    camera.position.set(0, 2, 10);
+    //Add the camera to the pivot so it follows the player
+    pivot.add(camera);
+
+    let box_geometry = new THREE.PlaneGeometry(10,10,15,15);
+    let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    let cube = new THREE.Mesh(box_geometry, material);
+    cube.rotation.x = -Math.PI / 2;
+    cube.position.y = 0;
+    scene.add(cube);
     /*
-    Portals = new THREE.Object3D();
+    Portals = new THREE.mesh();
 
     create_portal();
 
     scene.add(Portals);
 
     */
-
 
 }
 
@@ -127,9 +150,9 @@ function keyEvents(){
        
     document.addEventListener("keydown", event=>{
         keysDown[event.key] = true;
+
     }); 
 } 
-
 
 function promisifyLoader ( loader, onProgress ) 
 {
@@ -154,11 +177,11 @@ function load_ghost()
     let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
     let cube = new THREE.Mesh(box_geometry, material);
     
-    position = new THREE.Vector3( 0, 0, 0 );
+    ghost = new Ghost(cube, 0.1);
 
-    ghost = new Ghost(cube, position, 2);
+    scene.add(ghost.mesh);
 
-    scene.add(ghost.Object3D);
+    ghost.mesh.position.set( 0, 1, 0 );
 }
 
 function create_portal()

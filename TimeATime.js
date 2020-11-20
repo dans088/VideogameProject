@@ -54,8 +54,12 @@ scene = null,
 camera = null,
 uniforms = null,
 orbitControls = null;
-ghost = null;
+ghost = null; //Object for the player
 canvas = null;
+world = null; //Object for the cannon world
+sphereShape = null;
+ghostBody = null;
+physicsMaterial = null;
 
 let duration = 5000; // ms
 let currentTime = Date.now();
@@ -69,6 +73,8 @@ function animate()
    
     //uniforms.time.value += fract;
 
+    world.step(1/60);
+
 }
 
 function run() {
@@ -79,6 +85,7 @@ function run() {
     renderer.render( scene, camera );
 
     ghost.update();
+    ghost.mesh.position.copy(ghostBody.position);
 
     // Spin
     animate();
@@ -129,7 +136,7 @@ function scene_setup(canvas)
     let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
     let cube = new THREE.Mesh(box_geometry, material);
     cube.rotation.x = -Math.PI / 2;
-    cube.position.y = 0;
+    cube.position.set(1,-10,0);
     scene.add(cube);
     /*
     Portals = new THREE.mesh();
@@ -142,6 +149,48 @@ function scene_setup(canvas)
 
 }
 
+//Attempt #1
+//Function to innit the physics engine
+function innitCannon(){
+    world = new CANNON.World();
+    world.quatNormalizeSkip = 0;
+    world.quatNormalizeFast = false;
+
+    var solver = new CANNON.GSSolver();
+
+    world.defaultContactMaterial.contactEquationStiffness = 1e9;
+    world.defaultContactMaterial.contactEquationRelaxation = 4;
+
+    solver.iterations = 7;
+    solver.tolerance = 0.1;
+    var split = true;
+    if(split)
+        world.solver = new CANNON.SplitSolver(solver);
+    else
+        world.solver = solver;
+
+    world.gravity.set(0,-1,0);
+    world.broadphase = new CANNON.NaiveBroadphase();
+
+    // Create a slippery material (friction coefficient = 0.0)
+    physicsMaterial = new CANNON.Material("slipperyMaterial");
+    var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+                                                            physicsMaterial,
+                                                            0.0, // friction coefficient
+                                                            0.3  // restitution
+                                                            );
+    // We must add the contact materials to the world
+    world.addContactMaterial(physicsContactMaterial);
+
+    // Create a plane for the floor
+    var groundShape = new CANNON.Plane();
+    var groundBody = new CANNON.Body({ mass: 0 });
+    groundBody.addShape(groundShape);
+    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,-10,0),-Math.PI/2);
+    world.addBody(groundBody);
+}
+
+//Listeners for the movement of the player
 function keyEvents(){
 
     document.addEventListener("keyup", event=>{
@@ -175,13 +224,24 @@ function load_ghost()
 {
     let box_geometry = new THREE.BoxGeometry(1, 1, 1);
     let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    let cube = new THREE.Mesh(box_geometry, material);
     
+    let cube = new THREE.Mesh(box_geometry, material);
     ghost = new Ghost(cube, 0.1);
 
     scene.add(ghost.mesh);
 
     ghost.mesh.position.set( 0, 1, 0 );
+
+    //TEST
+    //Create cannon body
+    var halfExtents = new CANNON.Vec3(0,0,0);
+    var boxShape = new CANNON.Box(halfExtents);
+    ghostBody = new CANNON.Body({ mass: 5 });
+    ghostBody.addShape(boxShape);
+
+    world.addBody(ghostBody);
+
+   
 }
 
 function create_portal()

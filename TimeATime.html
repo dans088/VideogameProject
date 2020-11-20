@@ -12,6 +12,9 @@
 
 <script src="libs/three.js/three.js"></script>
 
+<!--Add Cannon Js library to use as the physics engine-->
+<script src="libs/cannon.js/cannon.js"></script>
+
 <script src="TimeATime.js"></script>
 <script src="sceneHandlers.js"></script>
 
@@ -69,7 +72,7 @@
 	$(document).ready(
 			function() {
 				let canvas = document.getElementById("webglcanvas");
-                
+                innitCannon();
 				scene_setup(canvas);
 
 				// Run the run loop

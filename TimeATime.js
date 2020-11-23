@@ -1,20 +1,22 @@
 
-//Movement keys
+//Movement keys (Controls for the game)
 let keysDown = {
     "a":false,
     "d":false,
     "ArrowLeft":false,
     "ArrowRight":false,
-    "Spacebar":false
+    "Space":false
 };
 
 //Class for the character that the player controls
-class Ghost
+class Player
 {
-    constructor(mesh, speed = 0.1)
+    constructor(mesh, body, speed = 0.1)
     {
         this.mesh = mesh;
+        this.body = body;
         this.speed = speed;
+        this.canJump = true;
     }
 
     async load_model(objModeUrl)
@@ -22,30 +24,36 @@ class Ghost
     
     }
 
-    //receive translation matrix
+    //Move position of the player to the left
     moveLeft()
     {
-        console.log("Moveleft");
-        this.mesh.position.x -= this.speed;
+        this.body.position.x -= this.speed;
     }
 
+    //Move position of the player to the right
     moveRight()
     {
-        console.log("Moveright");
-        this.mesh.position.x += this.speed;
+        this.body.position.x += this.speed;
     }
 
+    //Add velocity in 'y' to the player so they jump
     jump(){
-        //JUMP
+        this.body.velocity.y += 20;
     }
 
+    //The player character is updated according to the keys that the player is pressing
     update(){
         if(keysDown["a"] || keysDown["ArrowLeft"])
-            this.moveLeft()
+            this.moveLeft();
         if(keysDown["d"] || keysDown["ArrowRight"])
-            this.moveRight()
-        if(keysDown["Spacebar"])
-            this.jump()
+            this.moveRight();
+        if(keysDown["Space"]){
+            //If the player is not currently jumping
+            if(this.canJump){
+                this.jump();
+                this.canJump = false;
+            }
+        }
     }
 }
 
@@ -54,16 +62,47 @@ scene = null,
 camera = null,
 uniforms = null,
 orbitControls = null;
-ghost = null; //Object for the player
 canvas = null;
+player = null; //Object for the player
+playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 sphereShape = null;
-ghostBody = null;
 physicsMaterial = null;
 
 let duration = 5000; // ms
 let currentTime = Date.now();
 
+//Listeners for the movement of the player
+function keyEvents(){
+
+    document.addEventListener("keyup", event=>{
+        keysDown[event.code] = false;
+    });
+       
+    document.addEventListener("keydown", event=>{
+        keysDown[event.code] = true;  
+    }); 
+} 
+
+//Promise to load the 3d object
+function promisifyLoader ( loader, onProgress ) 
+{
+    function promiseLoader ( url ) {
+  
+      return new Promise( ( resolve, reject ) => {
+  
+        loader.load( url, resolve, onProgress, reject );
+  
+      } );
+    }
+  
+    return {
+      originalLoader: loader,
+      load: promiseLoader,
+    };
+}
+
+//Animate function
 function animate() 
 {
     let now = Date.now();
@@ -77,6 +116,7 @@ function animate()
 
 }
 
+//Run function
 function run() {
 
     requestAnimationFrame(function() { run(); });
@@ -84,15 +124,17 @@ function run() {
     // Render the scene
     renderer.render( scene, camera );
 
-    ghost.update();
-    ghost.mesh.position.copy(ghostBody.position);
+    //Update the player character
+    player.update();
+    //The position of the player character needs to be the same as the position of their cannon body
+    player.mesh.position.copy(playerBody.position);
 
     // Spin
     animate();
 
 }
 
-
+//Function that creates the scene
 function scene_setup(canvas)
 {
 
@@ -117,14 +159,15 @@ function scene_setup(canvas)
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
+    //Activate the key listeners
     keyEvents();
 
+    //Create the player character
     load_ghost();
 
-    pivot = new THREE.Object3D;
-
     //Create a pivot and add it to the mesh of the player
-    ghost.mesh.add(pivot);
+    pivot = new THREE.Object3D;
+    player.mesh.add(pivot);
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
@@ -132,12 +175,16 @@ function scene_setup(canvas)
     //Add the camera to the pivot so it follows the player
     pivot.add(camera);
 
-    let box_geometry = new THREE.PlaneGeometry(10,10,15,15);
+    /* Cannon test */
+
+    // Create a plane for the floor
+    let PlaneGeometry = new THREE.PlaneGeometry(10,10,15,15);
     let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-    let cube = new THREE.Mesh(box_geometry, material);
-    cube.rotation.x = -Math.PI / 2;
-    cube.position.set(1,-10,0);
-    scene.add(cube);
+    let ground = new THREE.Mesh(PlaneGeometry, material);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(1,-2,0);
+    scene.add(ground);
+
     /*
     Portals = new THREE.mesh();
 
@@ -169,11 +216,11 @@ function innitCannon(){
     else
         world.solver = solver;
 
-    world.gravity.set(0,-1,0);
+    world.gravity.set(0,-9.81,0);
     world.broadphase = new CANNON.NaiveBroadphase();
 
     // Create a slippery material (friction coefficient = 0.0)
-    physicsMaterial = new CANNON.Material("slipperyMaterial");
+    physicsMaterial = new CANNON.Material();
     var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
                                                             physicsMaterial,
                                                             0.0, // friction coefficient
@@ -183,63 +230,51 @@ function innitCannon(){
     world.addContactMaterial(physicsContactMaterial);
 
     // Create a plane for the floor
-    var groundShape = new CANNON.Plane();
+    //Create a shape
+    var groundShape = new CANNON.Box(new CANNON.Vec3(5, 5, 1));
+    //Create a cannon body without mass
     var groundBody = new CANNON.Body({ mass: 0 });
+    //Add the shape to the body
     groundBody.addShape(groundShape);
-    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,-10,0),-Math.PI/2);
+    //Set the position and rotation of the body
+    groundBody.position.set(1, -2.5, 0);
+    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
+    //Add it to the world
     world.addBody(groundBody);
 }
 
-//Listeners for the movement of the player
-function keyEvents(){
-
-    document.addEventListener("keyup", event=>{
-        keysDown[event.key] = false;
-    });
-       
-    document.addEventListener("keydown", event=>{
-        keysDown[event.key] = true;
-
-    }); 
-} 
-
-function promisifyLoader ( loader, onProgress ) 
-{
-    function promiseLoader ( url ) {
-  
-      return new Promise( ( resolve, reject ) => {
-  
-        loader.load( url, resolve, onProgress, reject );
-  
-      } );
-    }
-  
-    return {
-      originalLoader: loader,
-      load: promiseLoader,
-    };
-}
 
 function load_ghost()
 {
     let box_geometry = new THREE.BoxGeometry(1, 1, 1);
     let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
     
-    let cube = new THREE.Mesh(box_geometry, material);
-    ghost = new Ghost(cube, 0.1);
+    let playerMesh = new THREE.Mesh(box_geometry, material);
 
-    scene.add(ghost.mesh);
-
-    ghost.mesh.position.set( 0, 1, 0 );
 
     //TEST
     //Create cannon body
     var halfExtents = new CANNON.Vec3(0,0,0);
     var boxShape = new CANNON.Box(halfExtents);
-    ghostBody = new CANNON.Body({ mass: 5 });
-    ghostBody.addShape(boxShape);
+    playerBody = new CANNON.Body({ mass: 5 });
+    playerBody.addShape(boxShape);
 
-    world.addBody(ghostBody);
+    //Create player object
+    player = new Player(playerMesh, playerBody, 0.1);
+
+    playerBody.position.set( 0, 1, 0 );
+    playerMesh.position.set( 0, 1, 0 );
+
+    world.addBody(player.body);
+    scene.add(player.mesh);
+
+    player.body.addEventListener("collide",function(e){
+        
+        if(e.body.id == 0){
+            console.log("The sphere just collided with the ground!");
+            player.canJump = true;
+        }
+    });
 
    
 }

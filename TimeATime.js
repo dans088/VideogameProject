@@ -108,8 +108,10 @@ class Player
                 this.canJump = false;
             }
         }
+
     }
 }
+
 
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
@@ -129,6 +131,23 @@ sphereShape = null;
 physicsMaterial = null;
 testPortal = null;
 testPortalBody = null;
+
+testmaterials = {
+    shadow: new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0.5
+    }),
+    solid: new THREE.MeshNormalMaterial({}),
+    colliding: new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        transparent: true,
+        opacity: 0.5
+    }),
+    dot: new THREE.MeshBasicMaterial({
+        color: 0x0000ff
+    })
+};
 
 let duration = 5000; // ms
 let currentTime = Date.now();
@@ -174,6 +193,27 @@ function animate()
     //uniforms.time.value += fract;
 
     world.step(1/60);
+
+    // console.log(world.contacts);
+
+    world.contacts.forEach(function (contact) {
+        // console.log(contact);
+        // console.log("BI", contact.bi.id)
+        // console.log("BJ", contact.bj.id)
+        if(contact.bi.id == 3 ){
+            player.body.position.set(17,1,0)
+        }
+        // } else if (contact.bi.id == 1){
+        //     console.log("Bi: 11111111111111111111")
+        // } else if (contact.bi.id == 3){
+        //     console.log("Bi: 3333333333333333333333333")
+        // } else if (contact.bi.id == 0){
+        //     console.log("Bi: 000000000000000000")
+        // }
+        // contact.bi.mesh.material = this.materials.shadow;
+        // contact.bj.mesh.material = this.materials.colliding;
+        
+    })
 
 }
 
@@ -232,7 +272,7 @@ async function scene_setup(canvas)
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    camera.position.set(0, 3, 50);
+    camera.position.set(20, 3, 150);
 
     //Create the player character
     await load_ghost();
@@ -251,7 +291,13 @@ async function scene_setup(canvas)
     let ground = new THREE.Mesh(PlaneGeometry, material);
     ground.rotation.x = -Math.PI / 2;
     ground.position.set(1,-1,0);
+
+    let material2 = new THREE.MeshBasicMaterial( {color: 0x888431} );
+    let ground2 = new THREE.Mesh(PlaneGeometry, material2);
+    ground2.rotation.x = -Math.PI / 2;
+    ground2.position.set(15,-1,0);
     scene.add(ground);
+    scene.add(ground2);
 
     /*
     Portals = new THREE.mesh();
@@ -296,7 +342,7 @@ function innitCannon(){
 
     // Create a plane for the floor
     //Create a shape
-    var groundShape = new CANNON.Box(new CANNON.Vec3(5, 5, 1));
+    var groundShape = new CANNON.Box(new CANNON.Vec3(5, 1, 1));
     //Create a cannon body without mass
     var groundBody = new CANNON.Body({ mass: 0 });
     //Add the shape to the body
@@ -304,6 +350,17 @@ function innitCannon(){
     //Set the position and rotation of the body
     groundBody.position.set(1, -1, 0);
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
+
+
+    //Create a shape of second ground
+    var ground2Shape = new CANNON.Box(new CANNON.Vec3(5, 1, 1));
+    //Create a cannon body without mass
+    var ground2Body = new CANNON.Body({ mass: 0 });
+    //Add the shape to the body
+    ground2Body.addShape(ground2Shape);
+    //Set the position and rotation of the body
+    ground2Body.position.set(15,-1,0);
+    ground2Body.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
     // groundBody.addEventListener("collide",function(e){
 
     //     console.log("COOOOLLISSION", e);
@@ -315,6 +372,7 @@ function innitCannon(){
     // });
     //Add it to the world
     world.addBody(groundBody);
+    world.addBody(ground2Body);
 }
 
 
@@ -354,12 +412,13 @@ function load_ghost()
 
     player.body.addEventListener("collide",function(e){
         console.log("EEEEEEEEEEEEEEE",  e)  
-        if(e.body.id == 0){
-            console.log("The sphere just collided with the ground!", e);
+        if(e.body.id == 0 || e.body.id == 1){
+            // console.log("The sphere just collided with the ground!", e);
             player.canJump = true;
-        } else {
-            console.log("COLLIDED WITH ANOTHER THING")
         }
+        // } else {
+        //     console.log("COLLIDED WITH ANOTHER THING")
+        // }
     });
 
    
@@ -400,10 +459,9 @@ function create_portal()
     // portalBody.position.set( 3, 3, 0 );
 
     let portal = new THREE.Mesh(geometry, material);
-    portal.position.set( 3, 3, 0 );
+    portal.position.set( -3, 3, 0 );
     portal.rotation.x = Math.PI/1.7;
-
-    addPhysicalBody(portal, {mass: 1});
+    addPhysicalBody(portal, {mass: 0});
 
     // world.addBody(portalBody);
     scene.add(portal);
@@ -449,7 +507,7 @@ addPhysicalBody = function (mesh, bodyOptions) {
     body.computeAABB();
     // disable collision response so objects don't move when they collide
     // against each other
-    body.collisionResponse = true;
+    body.collisionResponse = false;
     // keep a reference to the mesh so we can update its properties later
     body.mesh = mesh;
 

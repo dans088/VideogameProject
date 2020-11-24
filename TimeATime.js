@@ -17,6 +17,7 @@ class Player
         this.body = body;
         this.speed = speed;
         this.canJump = true;
+
     }
 
     async load_model(objModeUrl)
@@ -43,6 +44,7 @@ class Player
 
     //The player character is updated according to the keys that the player is pressing
     update(){
+        // console.log(world.contacts)
         if(keysDown["a"] || keysDown["ArrowLeft"])
             this.moveLeft();
         if(keysDown["d"] || keysDown["ArrowRight"])
@@ -68,6 +70,8 @@ playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 sphereShape = null;
 physicsMaterial = null;
+testPortal = null;
+testPortalBody = null;
 
 let duration = 5000; // ms
 let currentTime = Date.now();
@@ -128,6 +132,8 @@ function run() {
     player.update();
     //The position of the player character needs to be the same as the position of their cannon body
     player.mesh.position.copy(playerBody.position);
+    //The position of the player character needs to be the same as the position of their cannon body
+    testPortal.position.copy(testPortalBody.position);
 
     // Spin
     animate();
@@ -182,16 +188,13 @@ function scene_setup(canvas)
     let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
     let ground = new THREE.Mesh(PlaneGeometry, material);
     ground.rotation.x = -Math.PI / 2;
-    ground.position.set(1,-2,0);
+    ground.position.set(1,-1,0);
     scene.add(ground);
 
     /*
     Portals = new THREE.mesh();
-
     create_portal();
-
     scene.add(Portals);
-
     */
 
 }
@@ -220,14 +223,14 @@ function innitCannon(){
     world.broadphase = new CANNON.NaiveBroadphase();
 
     // Create a slippery material (friction coefficient = 0.0)
-    physicsMaterial = new CANNON.Material();
-    var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
-                                                            physicsMaterial,
-                                                            0.0, // friction coefficient
-                                                            0.3  // restitution
-                                                            );
+    // physicsMaterial = new CANNON.Material();
+    // var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial,
+    //                                                         physicsMaterial,
+    //                                                         0.0, // friction coefficient
+    //                                                         0.3  // restitution
+    //                                                         );
     // We must add the contact materials to the world
-    world.addContactMaterial(physicsContactMaterial);
+    // world.addContactMaterial(physicsContactMaterial);
 
     // Create a plane for the floor
     //Create a shape
@@ -237,8 +240,17 @@ function innitCannon(){
     //Add the shape to the body
     groundBody.addShape(groundShape);
     //Set the position and rotation of the body
-    groundBody.position.set(1, -2.5, 0);
+    groundBody.position.set(1, -1, 0);
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
+    // groundBody.addEventListener("collide",function(e){
+
+    //     console.log("COOOOLLISSION", e);
+        
+    //     // if(e.body.id == 0){
+    //     //     console.log("The sphere just collided with the ground!");
+    //     //     player.canJump = true;
+    //     // }
+    // });
     //Add it to the world
     world.addBody(groundBody);
 }
@@ -262,17 +274,19 @@ function load_ghost()
     //Create player object
     player = new Player(playerMesh, playerBody, 0.1);
 
-    playerBody.position.set( 0, 1, 0 );
-    playerMesh.position.set( 0, 1, 0 );
+    playerBody.position.set( 0, 0, 0 );
+    playerMesh.position.set( 0, 0, 0 );
 
     world.addBody(player.body);
     scene.add(player.mesh);
 
     player.body.addEventListener("collide",function(e){
-        
+        console.log("EEEEEEEEEEEEEEE",  e)  
         if(e.body.id == 0){
-            console.log("The sphere just collided with the ground!");
+            console.log("The sphere just collided with the ground!", e);
             player.canJump = true;
+        } else {
+            console.log("COLLIDED WITH ANOTHER THING")
         }
     });
 
@@ -302,14 +316,35 @@ function create_portal()
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
         transparent: false
     } );
-
     
     let geometry = new THREE.SphereGeometry(2, 36, 36);
 
+    //Create cannon body
+    var halfExtents = new CANNON.Vec3( 0, 0, 0 );
+    var boxShape = new CANNON.Box(halfExtents);
+    portalBody = new CANNON.Body({ mass: 0 });
+    portalBody.addShape(boxShape);
+
+    portalBody.position.set( 3, 3, 0 );
+
     let portal = new THREE.Mesh(geometry, material);
+    portal.position.set( 3, 3, 0 );
     portal.rotation.x = Math.PI/1.7;
 
-    Portals.add(portal);
+    world.addBody(portalBody);
+    scene.add(portal);
 
+    testPortal = portal;
+    testPortalBody = portalBody;
     
+    portalBody.addEventListener("collide",function(e){
+
+        console.log("PORTAL COLLISION", e);
+        
+        // if(e.body.id == 0){
+        //     console.log("The sphere just collided with the ground!", e);
+        //     player.canJump = true;
+        // }
+    });
+
 }

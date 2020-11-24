@@ -266,7 +266,7 @@ function load_ghost()
 
     //TEST
     //Create cannon body
-    var halfExtents = new CANNON.Vec3(0,0,0);
+    var halfExtents = new CANNON.Vec3(1,0,0);
     var boxShape = new CANNON.Box(halfExtents);
     playerBody = new CANNON.Body({ mass: 5 });
     playerBody.addShape(boxShape);
@@ -320,31 +320,70 @@ function create_portal()
     let geometry = new THREE.SphereGeometry(2, 36, 36);
 
     //Create cannon body
-    var halfExtents = new CANNON.Vec3( 0, 0, 0 );
-    var boxShape = new CANNON.Box(halfExtents);
-    portalBody = new CANNON.Body({ mass: 0 });
-    portalBody.addShape(boxShape);
+    // var halfExtents = new CANNON.Vec3( 0, 1, 0 );
+    // var boxShape = new CANNON.Box(halfExtents);
+    // portalBody = new CANNON.Body({ mass: 5 });
+    // portalBody.addShape(boxShape);
 
-    portalBody.position.set( 3, 3, 0 );
+    // portalBody.position.set( 3, 3, 0 );
 
     let portal = new THREE.Mesh(geometry, material);
     portal.position.set( 3, 3, 0 );
     portal.rotation.x = Math.PI/1.7;
 
-    world.addBody(portalBody);
+    addPhysicalBody(portal, {mass: 1});
+
+    // world.addBody(portalBody);
     scene.add(portal);
 
     testPortal = portal;
-    testPortalBody = portalBody;
+    // testPortalBody = portalBody;
     
-    portalBody.addEventListener("collide",function(e){
+    // portalBody.addEventListener("collide",function(e){
 
-        console.log("PORTAL COLLISION", e);
+    //     console.log("PORTAL COLLISION", e);
         
-        // if(e.body.id == 0){
-        //     console.log("The sphere just collided with the ground!", e);
-        //     player.canJump = true;
-        // }
-    });
+    //     // if(e.body.id == 0){
+    //     //     console.log("The sphere just collided with the ground!", e);
+    //     //     player.canJump = true;
+    //     // }
+    // });
 
 }
+
+addPhysicalBody = function (mesh, bodyOptions) {
+    var shape;
+    // create a Sphere shape for spheres and thorus knots,
+    // a Box shape otherwise
+    if (mesh.geometry.type === 'SphereGeometry' ||
+    mesh.geometry.type === 'ThorusKnotGeometry') {
+        mesh.geometry.computeBoundingSphere();
+        shape = new CANNON.Sphere(mesh.geometry.boundingSphere.radius);
+    }
+    else {
+        mesh.geometry.computeBoundingBox();
+        var box = mesh.geometry.boundingBox;
+        shape = new CANNON.Box(new CANNON.Vec3(
+            (box.max.x - box.min.x) / 2,
+            (box.max.y - box.min.y) / 2,
+            (box.max.z - box.min.z) / 2
+        ));
+    }
+
+    var body = new CANNON.Body(bodyOptions);
+    testPortalBody = body;
+    body.addShape(shape);
+    body.position.copy(mesh.position);
+    body.computeAABB();
+    // disable collision response so objects don't move when they collide
+    // against each other
+    body.collisionResponse = true;
+    // keep a reference to the mesh so we can update its properties later
+    body.mesh = mesh;
+
+    // body.name = "Cuerpo fisico";
+
+    this.world.addBody(body);
+
+    return body;
+};

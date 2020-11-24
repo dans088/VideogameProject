@@ -25,39 +25,26 @@ class Player
         this.Object3D = Object3D;
     }
     
-    async loadObj(objModelUrl, root){
+    load3dModel(objModelUrl, mtlModelUrl)
+    {
+        mtlLoader = new THREE.MTLLoader();
 
-        const objPromiseLoader = promisifyLoader(new THREE.OBJLoader());
-    
-        try {
-            const object = await objPromiseLoader.load(objModelUrl.obj);
-    
-            //let texture = objModelUrl.hasOwnProperty('map') ? new THREE.TextureLoader().load(objModelUrl.map) : null;
-    
+        mtlLoader.load(mtlModelUrl, materials =>{
             
+            materials.preload();
+            console.log(materials);
+
+            objLoader = new THREE.OBJLoader();
             
-            object.traverse(function (child) {
-                if (child instanceof THREE.Mesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
+            objLoader.setMaterials(materials);
+
+            objLoader.load(objModelUrl, object=>{
+                objectList.push(object);
+                object.position.y = 0;
+                object.scale.set(0.2, 0.2, 0.2);
+                scene.add(object);
             });
-    
-            root.add(object);
-    
-            object.scale.set(0.2, 0.2, 0.2);
-            object.position.y = 0;
-            object.name = "Ghost";
-    
-    
-            console.log(object);
-            root.add(object);
-            
-        }catch(err){
-            return onError(err);
-        }
-    
-    
+        });
     }
 
     //Move position of the player to the left
@@ -98,6 +85,9 @@ let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,
 uniforms = null,
+mtlLoader = null,
+objLoader = null,
+objectList = [],
 orbitControls = null;
 canvas = null;
 player = null; //Object for the player
@@ -300,13 +290,15 @@ function load_ghost()
     let playerMesh = new THREE.Mesh(box_geometry, material);
     */
     
-    //object that holds the ghost
+    //3Dobject that holds the ghost_mesh
     root = new THREE.Object3D;
 
     ghost = new Ghost(root);
     //load ghost object
-    let objModelUrl = {obj:'models/obj/Ghost_obj/ghost.obj' };
-    ghost.loadObj(objModelUrl, ghost.Object3D);
+    let objModelUrl = "models/obj/Ghost_obj/Ghost.obj";
+    let mtlModelUrl = "models/obj/Ghost_obj/Ghost.mtl";
+    
+    ghost.load3dModel(objModelUrl, mtlModelUrl);
    
     scene.add(ghost.Object3D)
 

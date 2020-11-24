@@ -11,18 +11,12 @@ let keysDown = {
 //Class for the character that the player controls
 class Player
 {
-    constructor(mesh, body, speed = 0.1)
+    constructor(body)
     {
-        this.mesh = mesh;
         this.body = body;
-        this.speed = speed;
+        this.speed = 0.1;
         this.canJump = true;
-
-    }
-
-    constructor(Object3D)
-    {
-        this.Object3D = Object3D;
+        this.playerObject = null;
     }
     
     load3dModel(objModelUrl, mtlModelUrl)
@@ -42,8 +36,10 @@ class Player
                 objectList.push(object);
                 object.position.y = 0;
                 object.scale.set(0.2, 0.2, 0.2);
+                this.playerObject = object;
                 scene.add(object);
             });
+
         });
     }
 
@@ -91,6 +87,7 @@ objectList = [],
 orbitControls = null;
 canvas = null;
 player = null; //Object for the player
+root = null;
 playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 sphereShape = null;
@@ -150,15 +147,21 @@ function run() {
 
     requestAnimationFrame(function() { run(); });
     
-    // Render the scene
-    renderer.render( scene, camera );
+    if(camera != null){
+        // Render the scene
+        renderer.render( scene, camera );
+    }
 
     //Update the player character
     player.update();
-    //The position of the player character needs to be the same as the position of their cannon body
-    player.mesh.position.copy(playerBody.position);
-    //The position of the player character needs to be the same as the position of their cannon body
-    testPortal.position.copy(testPortalBody.position);
+    
+    if(player.playerObject != null){
+        //The position of the player character needs to be the same as the position of their cannon body
+        player.playerObject.position.copy(playerBody.position);
+        //The position of the player character needs to be the same as the position of their cannon body
+        testPortal.position.copy(testPortalBody.position);
+    }
+
 
     // Spin
     animate();
@@ -166,7 +169,7 @@ function run() {
 }
 
 //Function that creates the scene
-function scene_setup(canvas)
+async function scene_setup(canvas)
 {
 
     // Create the Three.js renderer and attach it to our canvas
@@ -193,16 +196,17 @@ function scene_setup(canvas)
     //Activate the key listeners
     keyEvents();
 
-    //Create the player character
-    load_ghost();
-
-    //Create a pivot and add it to the mesh of the player
-    pivot = new THREE.Object3D;
-    player.mesh.add(pivot);
-
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
     camera.position.set(0, 2, 10);
+
+    //Create the player character
+    await load_ghost();
+
+    //Create a pivot and add it to the mesh of the player
+    pivot = new THREE.Object3D;
+    player.playerObject.add(pivot);
+
     //Add the camera to the pivot so it follows the player
     pivot.add(camera);
 
@@ -290,17 +294,10 @@ function load_ghost()
     let playerMesh = new THREE.Mesh(box_geometry, material);
     */
     
-    //3Dobject that holds the ghost_mesh
-    root = new THREE.Object3D;
 
-    ghost = new Ghost(root);
     //load ghost object
-    let objModelUrl = "models/obj/Ghost_obj/Ghost.obj";
-    let mtlModelUrl = "models/obj/Ghost_obj/Ghost.mtl";
-    
-    ghost.load3dModel(objModelUrl, mtlModelUrl);
-   
-    scene.add(ghost.Object3D)
+    let objModelUrl = "models/Ghost.obj";
+    let mtlModelUrl = "models/Ghost.mtl";
 
 
     //TEST
@@ -310,14 +307,15 @@ function load_ghost()
     playerBody = new CANNON.Body({ mass: 5 });
     playerBody.addShape(boxShape);
 
-    //Create player object
-    player = new Player(playerMesh, playerBody, 0.1);
-
     playerBody.position.set( 0, 0, 0 );
-    playerMesh.position.set( 0, 0, 0 );
+
+
+    //Create player object
+    player = new Player(playerBody);
 
     world.addBody(player.body);
-    scene.add(player.mesh);
+
+    player.load3dModel(objModelUrl, mtlModelUrl);
 
     player.body.addEventListener("collide",function(e){
         console.log("EEEEEEEEEEEEEEE",  e)  

@@ -20,8 +20,43 @@ class Player
 
     }
 
-    async load_model(objModeUrl)
+    constructor(Object3D)
     {
+        this.Object3D = Object3D;
+    }
+    
+    async loadObj(objModelUrl, root){
+
+        const objPromiseLoader = promisifyLoader(new THREE.OBJLoader());
+    
+        try {
+            const object = await objPromiseLoader.load(objModelUrl.obj);
+    
+            //let texture = objModelUrl.hasOwnProperty('map') ? new THREE.TextureLoader().load(objModelUrl.map) : null;
+    
+            
+            
+            object.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+    
+            root.add(object);
+    
+            object.scale.set(0.2, 0.2, 0.2);
+            object.position.y = 0;
+            object.name = "Ghost";
+    
+    
+            console.log(object);
+            root.add(object);
+            
+        }catch(err){
+            return onError(err);
+        }
+    
     
     }
 
@@ -258,10 +293,22 @@ function innitCannon(){
 
 function load_ghost()
 {
+    /*
     let box_geometry = new THREE.BoxGeometry(1, 1, 1);
     let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
     
     let playerMesh = new THREE.Mesh(box_geometry, material);
+    */
+    
+    //object that holds the ghost
+    root = new THREE.Object3D;
+
+    ghost = new Ghost(root);
+    //load ghost object
+    let objModelUrl = {obj:'models/obj/Ghost_obj/ghost.obj' };
+    ghost.loadObj(objModelUrl, ghost.Object3D);
+   
+    scene.add(ghost.Object3D)
 
 
     //TEST

@@ -11,11 +11,12 @@ let keysDown = {
 //Class for the character that the player controls
 class Player
 {
-    constructor(body)
+    constructor(body, root)
     {
         this.body = body;
         this.speed = 0.1;
         this.canJump = true;
+        this.root = root;
         this.playerObject = null;
     }
     
@@ -37,11 +38,44 @@ class Player
                 object.position.y = 0;
                 object.scale.set(0.2, 0.2, 0.2);
                 this.playerObject = object;
+                console.log(object);
+                pivot.add(this.root);
                 scene.add(object);
+
+                this.playerObject.add(pivot);
             });
 
         });
     }
+
+    /*async load3dModel(objModelUrl, mtlModelUrl)
+    {
+        const objPromiseLoader = promisifyLoader(new THREE.OBJLoader());
+        let mtlLoader = new THREE.MTLLoader();
+
+        try{
+            
+            mtlLoader.load( async function(mtlModelUrl, materials){
+                
+                materials.preload();
+                console.log(materials);
+
+                const object = await objPromiseLoader.load(objModelUrl.obj, materials);
+
+                object.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                this.playerObject = object;
+
+            });
+        }
+        catch (err) {
+            return onError(err);
+        }
+    }*/
 
     //Move position of the player to the left
     moveLeft()
@@ -89,6 +123,7 @@ canvas = null;
 player = null; //Object for the player
 root = null;
 playerBody = null; //Object for the cannon body of the player
+pivot = null;
 world = null; //Object for the cannon world
 sphereShape = null;
 physicsMaterial = null;
@@ -162,7 +197,6 @@ function run() {
         testPortal.position.copy(testPortalBody.position);
     }
 
-
     // Spin
     animate();
 
@@ -198,14 +232,13 @@ async function scene_setup(canvas)
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    camera.position.set(0, 2, 10);
+    camera.position.set(0, 3, 50);
 
     //Create the player character
     await load_ghost();
 
     //Create a pivot and add it to the mesh of the player
     pivot = new THREE.Object3D;
-    player.playerObject.add(pivot);
 
     //Add the camera to the pivot so it follows the player
     pivot.add(camera);
@@ -294,11 +327,7 @@ function load_ghost()
     let playerMesh = new THREE.Mesh(box_geometry, material);
     */
     
-
-    //load ghost object
-    let objModelUrl = "models/Ghost.obj";
-    let mtlModelUrl = "models/Ghost.mtl";
-
+    root = new THREE.Object3D;
 
     //TEST
     //Create cannon body
@@ -311,9 +340,15 @@ function load_ghost()
 
 
     //Create player object
-    player = new Player(playerBody);
+    player = new Player(playerBody, root);
+
+   
 
     world.addBody(player.body);
+
+    //load ghost object
+    let objModelUrl = "models/Ghost.obj";
+    let mtlModelUrl = "models/Ghost.mtl";
 
     player.load3dModel(objModelUrl, mtlModelUrl);
 

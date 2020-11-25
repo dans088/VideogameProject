@@ -78,6 +78,7 @@
 		let canvas = document.getElementById("webglcanvas");
 		canvas.style.display = "block";
 
+		init(canvas);
 		innitCannon();
 		scene_setup(canvas);
 		create_portal();
@@ -122,9 +123,9 @@
 		<div id="titleScreen">
 
 			<!--Background music https://www.bensound.com/bensound-music/bensound-sadday.mp3 -->
-			<audio autoplay loop>
+			<!-- <audio autoplay loop>
 				<source src="music/bensound-sadday.mp3" type="audio/mp3">
-			</audio>
+			</audio> -->
 
 			<!--Main Menu-->
 			<div id="menu">

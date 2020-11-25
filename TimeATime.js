@@ -25,7 +25,7 @@ class Player
         mtlLoader.load(mtlModelUrl, materials =>{
             
             materials.preload();
-            console.log(materials);
+            // console.log(materials);
 
             objLoader = new THREE.OBJLoader();
             
@@ -36,7 +36,7 @@ class Player
                 object.position.y = 0;
                 object.scale.set(0.2, 0.2, 0.2);
                 this.playerObject = object;
-                console.log(object);
+                // console.log(object);
                 pivot.add(this.root);
                 scene.add(object);
 
@@ -98,13 +98,17 @@ sphereShape = null;
 physicsMaterial = null;
 testPortal = null;
 testPortalBody = null;
-testGround = null;
-testGroundBody = null;
 //Test moving cube
 testCube = null;
 testCubeBody = null;
 
-testmaterials = {
+//Level 1 Ground 1
+level1Grounds = [];
+ground1 = null;
+ground1Body = null;
+
+//Materials to be used on meshes
+materials = {
     shadow: new THREE.MeshBasicMaterial({
         color: 0x000000,
         transparent: true,
@@ -118,11 +122,28 @@ testmaterials = {
     }),
     dot: new THREE.MeshBasicMaterial({
         color: 0x0000ff
+    }),
+    level1: new THREE.MeshBasicMaterial({
+        color: 0x00ff00
+    }),
+    water: new THREE.MeshBasicMaterial({
+        color: 0x33DEF9
+    }),
+    orange: new THREE.MeshBasicMaterial({
+        color: 0xFFB841
     })
 };
 
 let duration = 5000; // ms
 let currentTime = Date.now();
+
+function init(canvas) //Make canvas full length of screen
+{
+    canvas.width = document.body.clientWidth; 
+    canvas.height = document.body.clientHeight;
+    canvasW = canvas.width;
+    canvasH = canvas.height;
+}
 
 //Listeners for the movement of the player
 function keyEvents(){
@@ -167,7 +188,7 @@ function animate()
     world.step(1/60);
 
     // console.log(world.contacts);
-    console.log(testCube.canJump)
+    // console.log(testCube.canJump)
 
     world.contacts.forEach(function (contact) {
         // console.log(contact);
@@ -176,17 +197,15 @@ function animate()
         // if(contact.bi.id == 2 ){
         //     player.body.position.set(17,1,0)
         // }
-        if (contact.bi.id == 1){
-            console.log("Bi: 11111111111111111111")
-        } else if (contact.bi.id == 2){
-            console.log("Bi: 222222222222222222")
-        } else if (contact.bi.id == 0){
-            console.log("Bi: 000000000000000000")
-        } else if (contact.bi.id == 3){
-            console.log("Bi: 333333333333333")
-        } 
-        // contact.bi.mesh.material = this.materials.shadow;
-        // contact.bj.mesh.material = this.materials.colliding;
+        // if (contact.bi.id == 1){
+        //     console.log("Bi: 11111111111111111111")
+        // } else if (contact.bi.id == 2){
+        //     console.log("Bi: 222222222222222222")
+        // } else if (contact.bi.id == 0){
+        //     console.log("Bi: 000000000000000000")
+        // } else if (contact.bi.id == 3){
+        //     console.log("Bi: 333333333333333")
+        // } 
         
     })
 
@@ -204,13 +223,11 @@ function run() {
 
     //Update the player character
     // player.update();
-        testCube.update();
+    testCube.update();
 
     if(player.playerObject != null){
         //The position of the player character needs to be the same as the position of their cannon body
         player.playerObject.position.copy(testCubeBody.position);
-        //The position of the portal character needs to be the same as the position of their cannon body
-        testGround.position.copy(testGroundBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
     }
@@ -261,30 +278,48 @@ async function scene_setup(canvas)
 
     //Add the camera to the pivot so it follows the player
     pivot.add(camera);
-    
-    //Create planes for the floor 1st Level
-    const groundGeometry1 = new THREE.BoxGeometry(10, 2, 5 );
-    const materialG1 = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    testGround = new THREE.Mesh( groundGeometry1, materialG1 );
-    testGround.position.set(0,-2,0);
 
-    // var halfExtents = new CANNON.Vec3(1,1,1);
-    // var boxShape = new CANNON.Box(halfExtents);
-    // var boxGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
-    testGroundBody = addPhysicalBody(testGround, {mass: 0}); 
-    scene.add( testGround );
+    load_map()
 
-    let geometry = new THREE.SphereGeometry(2, 36, 36);
-    let testSphere = new THREE.Mesh(geometry, materialG1);
-    testSphere.position.set( -9, 0, 0 );
-    testSphere.rotation.x = Math.PI/1.7;
+    // let geometry = new THREE.SphereGeometry(2, 36, 36);
+    // let testSphere = new THREE.Mesh(geometry, materialG1);
+    // testSphere.position.set( -9, 0, 0 );
+    // testSphere.rotation.x = Math.PI/1.7;
 
     //Create cannon body
-    addPhysicalBody(testSphere, {mass: 0});
+    // addPhysicalBody(testSphere, {mass: 0});
 
-    // world.addBody(portalBody);
-    scene.add(testSphere);
+    // scene.add(testSphere);
 
+}
+
+function load_map(){ //Load level plane grounds (boxes)
+    //Create planes for the floor 1st Level
+
+    //Call function with parameters (Geometry, Position, Material) to Create Meshes
+    create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.level1);
+    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water);
+    create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.level1);
+    create_ground({x: 10, y: 2, z: 5}, {x: 54, y: -2, z: 0}, materials.level1);
+    create_ground({x: 8, y: 2, z: 5}, {x: 63, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 80, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 92, y: -2, z: 0}, materials.orange);
+
+    //Add physical body to each mesh and add mesh to scene
+    for(let i = 0; i<level1Grounds.length; i++){
+        addPhysicalBody(level1Grounds[i], {mass: 0});
+        scene.add(level1Grounds[i]);
+    }
+}
+
+function create_ground(groundGeometry, groundPosition, material){
+
+    let gGeometry = new THREE.BoxGeometry(groundGeometry.x, groundGeometry.y, groundGeometry.z);
+    ground = new THREE.Mesh( gGeometry, material );
+    ground.position.set(groundPosition.x, groundPosition.y, groundPosition.z);
+    level1Grounds.push(ground);
 }
 
 //Attempt #1
@@ -433,7 +468,7 @@ class Cube
 
     //The player character is updated according to the keys that the player is pressing
     update(){
-        // console.log(world.contacts)
+        this.body.velocity.z = 0;
         if(keysDown["KeyA"] || keysDown["ArrowLeft"])
             this.moveLeft();
         if(keysDown["KeyD"] || keysDown["ArrowRight"])
@@ -457,7 +492,7 @@ function load_cube()
     let cubeMesh = new THREE.Mesh(box_geometry, material);
 
     //Create player object
-    testCubeBody = addPhysicalBody(cubeMesh, {mass: 5})
+    testCubeBody = addPhysicalBody(cubeMesh, {mass: 1})
     testCube = new Cube(cubeMesh, testCubeBody, 0.1);
 
     testCubeBody.position.set( 0, 1, 0 );
@@ -468,8 +503,7 @@ function load_cube()
 
     testCube.body.addEventListener("collide",function(e){
         // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
-        if(e.body.id == 2){
-            console.log("SALTAAAAAAAAAAAAAAAAAAAR")
+        if(e.body.id > 1){
             testCube.canJump = true;
         }
     });

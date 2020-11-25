@@ -14,7 +14,6 @@ class Player
     constructor(root)
     {
         this.speed = 0.1;
-        this.canJump = true;
         this.root = root;
         this.playerObject = null;
     }
@@ -205,9 +204,7 @@ function run() {
 
     //Update the player character
     // player.update();
-    if (testCube != null){
         testCube.update();
-    }
 
     if(player.playerObject != null){
         //The position of the player character needs to be the same as the position of their cannon body
@@ -455,7 +452,7 @@ class Cube
 function load_cube()
 {
     let box_geometry = new THREE.BoxGeometry(1, 1, 1);
-    let material = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0} );
+    let material = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0, transparent: true} );
     
     let cubeMesh = new THREE.Mesh(box_geometry, material);
 
@@ -470,9 +467,9 @@ function load_cube()
     scene.add(testCube.mesh);
 
     testCube.body.addEventListener("collide",function(e){
-        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", e)
-        if(e.body.id == 1){
-            console.log("saltar")
+        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
+        if(e.body.id == 2){
+            console.log("SALTAAAAAAAAAAAAAAAAAAAR")
             testCube.canJump = true;
         }
     });

@@ -116,7 +116,6 @@ class Player
     }
 }
 
-
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,
@@ -407,14 +406,21 @@ function load_ghost()
 
     //TEST
     //Create cannon body
+<<<<<<< HEAD
     // var halfExtents = new CANNON.Vec3(1,0,0);
     // var boxShape = new CANNON.Box(halfExtents);
     var boxShape = new CANNON.Box(new CANNON.Vec3(0.4 , 0.4, 0));
     playerBody = new CANNON.Body({ mass: 2 });
+=======
+    var halfExtents = new CANNON.Vec3(0,0,0);
+    var boxShape = new CANNON.Box(halfExtents);
+    playerBody = new CANNON.Body({ mass: 5 });
+>>>>>>> 31ffb50bad143d7d3a838bbbadb1ecd709b283ff
     playerBody.addShape(boxShape);
 
     playerBody.position.set( -3, 7  , 0 );
 
+<<<<<<< HEAD
     // playerBody.collisionResponse = true;
     
 
@@ -425,6 +431,11 @@ function load_ghost()
     // body2mesh(playerBody, true);
     // player.playerObject.position.copy(playerBody.position);
     player.body.computeAABB();
+=======
+    //Create player object
+    player = new Player(playerBody, root);
+
+>>>>>>> 31ffb50bad143d7d3a838bbbadb1ecd709b283ff
     world.addBody(player.body);
 
     //load ghost object

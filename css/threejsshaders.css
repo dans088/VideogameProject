@@ -7,12 +7,6 @@
 	background-color:#aaaaaa;
 }
 
-#title {
-	position:absolute;
-	left:20px;
-	top:20px;
-}
-
 #prompt {
 	position:absolute;
 	bottom:20px;

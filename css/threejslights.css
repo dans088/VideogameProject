@@ -1,12 +1,5 @@
 @charset "UTF-8";
 
-#title {
-	color:white;
-	position:absolute;
-	left:20px;
-	top:20px;
-}
-
 #prompt {
 	color:white;
 	position:absolute;

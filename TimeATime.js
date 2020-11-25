@@ -405,15 +405,11 @@ function load_ghost()
     root = new THREE.Object3D;
 
     //TEST
-    //Create cannon body
+    //Create cannon bodya
     // var halfExtents = new CANNON.Vec3(1,0,0);
     // var boxShape = new CANNON.Box(halfExtents);
     var boxShape = new CANNON.Box(new CANNON.Vec3(0.4 , 0.4, 0));
     playerBody = new CANNON.Body({ mass: 2 });
-
-    var halfExtents = new CANNON.Vec3(0,0,0);
-    var boxShape = new CANNON.Box(halfExtents);
-    playerBody = new CANNON.Body({ mass: 5 });
 
     playerBody.addShape(boxShape);
 
@@ -764,7 +760,7 @@ function body2mesh(body, wireframe) {
   
       var o = body.shapeOffsets[l];
       var q = body.shapeOrientations[l];
-      mesh.position.set(3, 0  , 0);
+      mesh.position.set(3, 1  , 0);
       mesh.quaternion.set(q.x, q.y, q.z, q.w);
   
       obj.add(mesh);

@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="libs/jquery-ui/jquery-ui.css" />
 <link rel="stylesheet" href="css/threejslights.css" />
 <link rel="stylesheet" href="css/threejsshaders.css" />
+<link rel="stylesheet" href="css/titleScreen.css" />
 
 <script src="libs/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="libs/jquery-ui/jquery-ui.js"></script>
@@ -68,27 +69,89 @@
 
 </script>
 
-
-
 <script type="text/javascript">
 
-	$(document).ready(
-			function() {
-				let canvas = document.getElementById("webglcanvas");
-                innitCannon();
-				scene_setup(canvas);
-				create_portal();
+	//Function that starts the game
+	//$( document ).ready(function() {
+	function startGame() {
 
-				// Run the run loop
-				run();
-			}
-	);
+		let canvas = document.getElementById("webglcanvas");
+		canvas.style.display = "block";
+
+		innitCannon();
+		scene_setup(canvas);
+		create_portal();
+
+		// Run the run loop
+		run();
+	}
+	
+	//Function that displays or removes the title screen menu
+	function toggleMenu() {
+		var menu = document.getElementById("menu");
+		if (menu.style.display === "none") {
+			menu.style.display = "block";
+		} else {
+			menu.style.display = "none";
+		}
+	}
+
+	//Function that displays or removes the instructions menu
+	function toggleInstructions() {
+		var instructions = document.getElementById("instructions");
+		if (instructions.style.display === "none") {
+			instructions.style.display = "block";
+		} else {
+			instructions.style.display = "none";
+		}
+	}
+
+	//Function that removes all the elements from the title screen
+	function removeTitleScreen() {
+		var titleScreen = document.getElementById("titleScreen");
+		titleScreen.remove();
+	}
+
 </script>
 
 </head>
 <body>
 	<div id="container">
-		<canvas id="webglcanvas" width="800" height="500" style = "background-color: black;"></canvas>
+
+		<!--Game's Title Screen-->
+		<div id="titleScreen">
+
+			<!--Background music https://www.bensound.com/bensound-music/bensound-sadday.mp3 -->
+			<audio autoplay loop>
+				<source src="music/bensound-sadday.mp3" type="audio/mp3">
+			</audio>
+
+			<!--Main Menu-->
+			<div id="menu">
+				<h1 id="title">Time after Time</h1>
+				<button id="instructionsButton" onclick="toggleMenu(), toggleInstructions()">Instructions</button>
+				<button id="startGameButton" onclick="removeTitleScreen(),startGame()">Start Game</button>
+			</div>
+
+			<!--Instructions Menu-->
+			<div id="instructions" style="display: none;">
+				<h1 id="titleInstructions">Instructions</h1>
+				<p id="instructionsText">Move: Left and right arrow</p>
+				<p id="instructionsText2">Jump: Spacebar</p>
+				<p id="instructionsText3">Grab: E</p>
+				<p id="instructionsText4">You are stuck in limbo. Reach the end of the levels using the portals to try and find the exit</p>
+				<button id="goBackButton" onclick="toggleInstructions(),toggleMenu()">Go Back</button>
+			</div>
+
+			<canvas width="900" height="600" style = "background-color: black;"></canvas>
+
+		</div>
+
+		<!--Game's Canvas-->
+		<div id="game">
+			<canvas id="webglcanvas" width="900" height="600" style = "background-color: black; display: none;"></canvas>
+		</div>
+		
 	</div>
 	
 </body>

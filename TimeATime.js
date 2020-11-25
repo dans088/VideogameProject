@@ -112,7 +112,6 @@ class Player
     }
 }
 
-
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,
@@ -389,18 +388,15 @@ function load_ghost()
 
     //TEST
     //Create cannon body
-    var halfExtents = new CANNON.Vec3(1,0,0);
+    var halfExtents = new CANNON.Vec3(0,0,0);
     var boxShape = new CANNON.Box(halfExtents);
     playerBody = new CANNON.Body({ mass: 5 });
     playerBody.addShape(boxShape);
 
     playerBody.position.set( 0, 0, 0 );
 
-
     //Create player object
     player = new Player(playerBody, root);
-
-   
 
     world.addBody(player.body);
 

@@ -140,14 +140,13 @@ playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 sphereShape = null;
 physicsMaterial = null;
-testPortal = null;
-testPortalBody = null;
 //Test moving cube
 testCube = null;
 testCubeBody = null;
 //turtle
 turtle = null; //Object for the turtle
 turtleBody = null;
+transporthandler = true;
 
 //Level 1 Ground 1
 level1Grounds = [];
@@ -176,6 +175,9 @@ materials = {
     }),
     orange: new THREE.MeshBasicMaterial({
         color: 0xFFB841
+    }),
+    blue: new THREE.MeshBasicMaterial({
+        color: 0x5BA7D3
     })
 };
 
@@ -285,7 +287,6 @@ function run() {
     }
 
     //Update the player character
-    // player.update();
     testCube.update();
 
     if(player.playerObject != null){
@@ -296,16 +297,12 @@ function run() {
         player.playerObject.position.copy(testCubeBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
-        console.log("GHOST X", testCube.mesh.position.x);
     }
     
 
-    if(turtle.turtleObject != null){
-        console.log(turtle.grabbed);
-        console.log("TURTLE X", turtle.mesh.position.x);
+    if(turtle && turtle.turtleObject != null){
         turtle.body.velocity.z = 0;
         distance = Math.abs(turtleBody.position.x - testCubeBody.position.x);
-        console.log(distance);
         if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
             turtleBody.position.x = testCubeBody.position.x + 1;
             turtleBody.position.y = testCubeBody.position.y;
@@ -382,27 +379,41 @@ async function scene_setup(canvas)
     testGround.position.set(0,-2,0);
 
     load_map()
+    create_portals();
 
 }
 
 function load_map(){ //Load level plane grounds (boxes)
 
     //Create planes for the floor 1st Level
+
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
-    create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.level1);
+    create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.blue);
     create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water); //Water
-    create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.level1);
-    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.level1);
-    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.level1);
+    create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.blue);
+    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
+    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water); //Water
-    create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.level1);
-    create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.orange);
+    create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
+    create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.blue);
+
+    //Call function with parameters (Geometry, Position, Material) to Create Meshes
+    create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -40, z: 0}, materials.level1);
+    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -40, z: 0}, materials.water); //Water
+    create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -40, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: -35, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: -35, z: 0}, materials.level1);
+    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -40, z: 0}, materials.water); //Water
+    create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -40, z: 0}, materials.level1);
+    create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -40, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -40, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -40, z: 0}, materials.orange);
 
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
-        addPhysicalBody(level1Grounds[i], {mass: 0});
+        addPhysicalBody(level1Grounds[i], {mass: 0}, true);
         scene.add(level1Grounds[i]);
     }
 }
@@ -450,13 +461,13 @@ function load_turtle()
     let turtleMesh = new THREE.Mesh(turtleGeometry, turtleMaterial);
 
     //Create turtle object
-    turtleBody = addPhysicalBody(turtleMesh, {mass: 1})
+    turtleBody = addPhysicalBody(turtleMesh, {mass: 1}, true)
     turtle = new Turtle(turtleMesh, turtleBody, 0.1);
 
     turtle.load3dModel(objurl, mtlurl);
 
-    turtleMesh.position.set( 1, 1, 0 );
-    turtleBody.position.set( 1, 1, 0 );
+    turtleMesh.position.set( 1, -35, 0 );
+    turtleBody.position.set( 1, -35, 0 );
     scene.add(turtle.mesh);
 }
 
@@ -475,108 +486,118 @@ function load_ghost()
     let ghostMaterial = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
     let ghostMesh = new THREE.Mesh(ghostGeometry , ghostMaterial);
     //Create player object
-    testCubeBody = addPhysicalBody(ghostMesh, {mass: 1})
+    testCubeBody = addPhysicalBody(ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 0, 1, 0 );
-    testCubeBody.position.set( 0, 1, 0 );
+    ghostMesh.position.set( 0, -35, 0 );
+    testCubeBody.position.set( 0, -35, 0 );
 
     testCube.body.addEventListener("collide",function(e){
-        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
-        if(e.body.id > 1){
+        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
+        if(e.body.id == 22) { // Arriba
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                testCubeBody.position.set( 6, -35, 0 );
+                if(turtle.grabbed){
+                    turtleBody.position.copy(testCubeBody.position);
+                    turtle.turtleObject.scale.set(1,1,1);
+                }
+            }
+            
+        } else if(e.body.id == 23){
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                testCubeBody.position.set( 6, 3, 0 );
+                if(turtle.grabbed){
+                    turtleBody.position.copy(testCubeBody.position);
+                    turtle.turtleObject.scale.set(6,6,6);
+                }
+            }
+        } else if(e.body.id == 24){
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                testCubeBody.position.set( 55, 3, 0 );
+                if(turtle.grabbed){
+                    turtleBody.position.copy(testCubeBody.position);
+                    turtle.turtleObject.scale.set(6,6,6);
+                }
+            }
+        }else if(e.body.id == 25){ // Arriba
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                testCubeBody.position.set( 55, -35, 0 );
+                if(turtle.grabbed){
+                    turtleBody.position.copy(testCubeBody.position);
+                    turtle.turtleObject.scale.set(1,1,1);
+                }
+            }
+        } else if(e.body.id > 2 && e.body.id != 22 && e.body.id != 23 && e.body.id != 24){
             testCube.canJump = true;
+            transporthandler = true;
         }
-        // if(e.body.id == 1){
-        //     console.log(1);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 2){
-        //     console.log(2);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 3){
-        //     console.log(3);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 4){
-        //     console.log(4);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 5){
-        //     console.log(5);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 6){
-        //     console.log(6);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 7){
-        //     console.log(7);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 8){
-        //     console.log(8);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 9){
-        //     console.log(9);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 10){
-        //     console.log(10);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 11){
-        //     console.log(11);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 12){
-        //     console.log(12);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 13){
-        //     console.log(13);
-        //     testCube.canJump = true;
-        // } else if (e.body.id == 14){
-        //     console.log(14);
-        //     testCube.canJump = true;
-        // }
     });
 
     scene.add(testCube.mesh);
 
 }
 
-function create_portal()
-{
-    //create shadermaterial for the portal 
+function create_portals(){ //Create many portals
+
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
-    
+    create_portal(NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
+    create_portal(COLORMAP, NOISEMAP, {x: 6, y: -35, z: 0})
+    create_portal(COLORMAP, NOISEMAP, {x: 55, y: -35, z: 0})
+    create_portal(NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
+}
+
+function create_portal(texture1, texture2, portalPosition) //Receive textures and position to create a portal
+{
+    //create shadermaterial for the portal 
+
+    //Create portal material
     uniforms = 
     {
         time: { type: "f", value: 0.1 },
-        noiseTexture: { type: "t", value: NOISEMAP },
-        glowTexture: { type: "t", value: COLORMAP }
+        noiseTexture: { type: "t", value: texture1 },
+        glowTexture: { type: "t", value: texture2 }
     };
 
     uniforms.noiseTexture.value.wrapS = uniforms.noiseTexture.value.wrapT = THREE.RepeatWrapping;
     uniforms.glowTexture.value.wrapS = uniforms.glowTexture.value.wrapT = THREE.RepeatWrapping;
 
-
-    //Create Portal mesh
     let material = new THREE.ShaderMaterial({
         uniforms: uniforms,
         vertexShader: document.getElementById( 'vertexShader' ).textContent,
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
         transparent: false
     } );
-    
-    let geometry = new THREE.SphereGeometry(2, 36, 36);
+
+    //Create Portal mesh
+    let geometry = new THREE.SphereGeometry(1.5, 36, 36);
     let portal = new THREE.Mesh(geometry, material);
-    portal.position.set( -3, 3, 0 );
-    portal.rotation.x = Math.PI/1.7;
+    portal.position.set( portalPosition.x, portalPosition.y, portalPosition.z );
+    portal.rotation.x = Math.PI/2;
 
-    //Create cannon body
-    addPhysicalBody(portal, {mass: 0});
+    //Create portal cannon body
+    addPhysicalBody(portal, {mass: 0}, false);
 
-    // world.addBody(portalBody);
+    //Add portal to scene
     scene.add(portal);
-
-    testPortal = portal;
-
 }
 
-addPhysicalBody = function (mesh, bodyOptions) {
+
+
+addPhysicalBody = function (mesh, bodyOptions, collision) {
     var shape;
     // create a Sphere shape for spheres and thorus knots,
     // a Box shape otherwise
@@ -601,7 +622,7 @@ addPhysicalBody = function (mesh, bodyOptions) {
     body.computeAABB();
     // disable collision response so objects don't move when they collide
     // against each other
-    body.collisionResponse = true;
+    body.collisionResponse = collision;
     // keep a reference to the mesh so we can update its properties later
     body.mesh = mesh;
 

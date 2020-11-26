@@ -174,7 +174,7 @@ function animate()
     currentTime = now;
     let fract = deltat / duration;
    
-    //uniforms.time.value += fract;
+    uniforms.time.value += fract;
 
     world.step(1/60);
 
@@ -277,7 +277,7 @@ async function scene_setup(canvas)
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
-    camera.position.set(0, 3, 50);
+    camera.position.set(0, 0, 30);
 
     //Create a pivot and add it to the mesh of the player
     pivot = new THREE.Object3D;

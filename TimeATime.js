@@ -501,6 +501,11 @@ function load_ghost()
                 transporthandler = false;
                 testCubeBody.position.set( 6, -35, 0 );
                 if(turtle.grabbed){
+                    //Return to orginal size
+                    turtle.mesh.scale.x = 1; 
+                    turtle.mesh.scale.y = 1;
+                    turtle.mesh.scale.z = 1;
+                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(1,1,1);
                 }
@@ -513,6 +518,11 @@ function load_ghost()
                 transporthandler = false;
                 testCubeBody.position.set( 6, 3, 0 );
                 if(turtle.grabbed){
+                    // Increase turtle size
+                    turtle.mesh.scale.x = 5;
+                    turtle.mesh.scale.y = 5;
+                    turtle.mesh.scale.z = 5;
+                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(6,6,6);
                 }
@@ -524,6 +534,11 @@ function load_ghost()
                 transporthandler = false;
                 testCubeBody.position.set( 55, 3, 0 );
                 if(turtle.grabbed){
+                    // Increase turtle size
+                    turtle.mesh.scale.x = 5;
+                    turtle.mesh.scale.y = 5;
+                    turtle.mesh.scale.z = 5; 
+                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(6,6,6);
                 }
@@ -535,6 +550,11 @@ function load_ghost()
                 transporthandler = false;
                 testCubeBody.position.set( 55, -35, 0 );
                 if(turtle.grabbed){
+                    //Return to orginal size
+                    turtle.mesh.scale.x = 1; 
+                    turtle.mesh.scale.y = 1;
+                    turtle.mesh.scale.z = 1;
+                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(1,1,1);
                 }
@@ -607,13 +627,7 @@ addPhysicalBody = function (mesh, bodyOptions, collision) {
         shape = new CANNON.Sphere(mesh.geometry.boundingSphere.radius);
     }
     else {
-        mesh.geometry.computeBoundingBox();
-        var box = mesh.geometry.boundingBox;
-        shape = new CANNON.Box(new CANNON.Vec3(
-            (box.max.x - box.min.x) / 2,
-            (box.max.y - box.min.y) / 2,
-            (box.max.z - box.min.z) / 2
-        ));
+        shape = createBoxShape(mesh);
     }
 
     var body = new CANNON.Body(bodyOptions);
@@ -630,6 +644,19 @@ addPhysicalBody = function (mesh, bodyOptions, collision) {
 
     return body;
 };
+
+function createBoxShape (mesh){
+
+    mesh.geometry.computeBoundingBox();
+    var box = mesh.geometry.boundingBox;
+    shape = new CANNON.Box(new CANNON.Vec3(
+        (box.max.x - box.min.x) / 2,
+        (box.max.y - box.min.y) / 2,
+        (box.max.z - box.min.z) / 2
+    ));
+
+    return shape;
+}
 
 //Class for the character that the player controls
 class Cube

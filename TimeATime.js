@@ -635,7 +635,11 @@ class Cube
 
     //Add velocity in 'y' to the player so they jump
     jump(){
-        this.body.velocity.y += 10;
+        if(this.body.velocity.y < 3){
+            this.body.velocity.y += 10;
+        } else if (this.body.velocity.y > 3 && this.body.velocity.y < 7) {
+            this.body.velocity.y += 6;
+        }
     }
 
     //The player character is updated according to the keys that the player is pressing

@@ -296,12 +296,25 @@ function run() {
         player.playerObject.position.copy(testCubeBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
+        console.log("GHOST X", testCube.mesh.position.x);
     }
     
 
     if(turtle.turtleObject != null){
         console.log(turtle.grabbed);
+        console.log("TURTLE X", turtle.mesh.position.x);
         turtle.body.velocity.z = 0;
+        distance = Math.abs(turtleBody.position.x - testCubeBody.position.x);
+        console.log(distance);
+        if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
+            turtleBody.position.x = testCubeBody.position.x + 1;
+            turtleBody.position.y = testCubeBody.position.y;
+            turtleBody.position.z = testCubeBody.position.z;
+        } else if (turtle.grabbed && turtleBody.position.x < testCubeBody.position.x && distance < 3){
+            turtleBody.position.x = testCubeBody.position.x - 1;
+            turtleBody.position.y = testCubeBody.position.y;
+            turtleBody.position.z = testCubeBody.position.z;
+        }
         //The position of the player character needs to be the same as the position of their cannon body
         turtle.turtleObject.position.copy(turtleBody.position);
         //The position of the player character needs to be the same as the position of their cannon body

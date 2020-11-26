@@ -76,7 +76,6 @@
 	function startGame() {
 
 		let canvas = document.getElementById("webglcanvas");
-		canvas.style.display = "block";
 
 		init(canvas);
 		innitCannon();
@@ -106,10 +105,23 @@
 		}
 	}
 
-	//Function that removes all the elements from the title screen
-	function removeTitleScreen() {
-		var titleScreen = document.getElementById("titleScreen");
-		titleScreen.remove();
+	//Function that stops the title screen music from playing
+	function stopMenuMusic(){
+		var music = document.getElementById('menuMusic');
+		if(music!=null){
+			music.pause();
+			music.currentTime = 0;
+		}
+	}
+
+	//Function that displays or removes the instructions menu
+	function toggleGameOver() {
+		var gameOverScreen = document.getElementById("gameOverScreen");
+		if (gameOverScreen.style.display === "none") {
+			gameOverScreen.style.display = "block";
+		} else {
+			gameOverScreen.style.display = "none";
+		}
 	}
 
 </script>
@@ -118,41 +130,40 @@
 <body>
 	<div id="container">
 
-		<!--Game's Title Screen-->
-		<div id="titleScreen">
-			
-			<!--Background music https://www.bensound.com/bensound-music/bensound-sadday.mp3 -->
-			<!--
+		<!--Background music https://www.bensound.com/bensound-music/bensound-sadday.mp3 -->
+		<!--
+		<div id="menuMusic"> 
 			<audio autoplay loop>
-				<source src="music/bensound-sadday.mp3" type="audio/mp3">
-			</audio>-->
+			<source src="music/bensound-sadday.mp3" type="audio/mp3">
+			</audio>
+		</div>
+		-->
 
-			<!--Main Menu-->
-			<div id="menu">
-				<h1 id="title">Time after Time</h1>
-				<button id="instructionsButton" onclick="toggleMenu(), toggleInstructions()">Instructions</button>
-				<button id="startGameButton" onclick="removeTitleScreen(),startGame()">Start Game</button>
-			</div>
-
-			<!--Instructions Menu-->
-			<div id="instructions" style="display: none;">
-				<h1 id="titleInstructions">Instructions</h1>
-				<p id="instructionsText">Move: Left and right arrow</p>
-				<p id="instructionsText2">Jump: Spacebar</p>
-				<p id="instructionsText3">Grab: G</p>
-				<p id="instructionsText4">You are stuck in limbo. Reach the end of the levels using the portals to try and find the exit</p>
-				<button id="goBackButton" onclick="toggleInstructions(),toggleMenu()">Go Back</button>
-			</div>
-
-			<canvas width="900" height="600" style = "background-color: black;"></canvas>
-
+		<!--Main Menu-->
+		<div id="menu">
+			<h1 id="title">Time after Time</h1>
+			<button id="instructionsButton" onclick="toggleMenu(), toggleInstructions()">Instructions</button>
+			<button id="startGameButton" onclick="toggleMenu(),stopMenuMusic(),startGame()">Start Game</button>
 		</div>
 
-		<!--Game's Canvas-->
-		<div id="game">
-			<canvas id="webglcanvas" width="900" height="600" style = "background-color: black; display: none;"></canvas>
+		<!--Instructions Menu-->
+		<div id="instructions" style="display: none;">
+			<h1 id="titleInstructions">Instructions</h1>
+			<p id="instructionsText">Move: Left and right arrow</p>
+			<p id="instructionsText2">Jump: Spacebar</p>
+			<p id="instructionsText3">Grab: G</p>
+			<p id="instructionsText4">You are stuck in limbo. Reach the end of the levels using the portals to try and find the exit</p>
+			<button id="goBackButton" onclick="toggleInstructions(),toggleMenu()">Go Back</button>
 		</div>
 		
+		<!--Game over screen-->
+		<div id="gameOverScreen" style="display: none;">
+			<h1 id="titleGameOver">Game over</h1>
+			<button id="tryAgainButton" onclick="toggleGameOver(),startGame()">Try again</button>
+			<button id="startGameButton" onclick="toggleGameOver(),toggleMenu()">Main menu</button>
+		</div>
+
+		<canvas id="webglcanvas" width="900" height="600" style = "background-color: black;"></canvas>
 	</div>
 	
 </body>

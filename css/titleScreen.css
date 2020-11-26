@@ -1,4 +1,16 @@
-#titleScreen{
+#menu{
+	color:white;
+	font-family: PlayMeGames;
+	letter-spacing: 6px;
+}
+
+#instructions{
+	color:white;
+	font-family: PlayMeGames;
+	letter-spacing: 6px;
+}
+
+#gameOverScreen{
 	color:white;
 	font-family: PlayMeGames;
 	letter-spacing: 6px;
@@ -16,6 +28,13 @@
 	left:230px;
 	top:40px;
 	font-size: 50px;
+}
+
+#titleGameOver{
+	position:absolute;
+	left:190px;
+	top:140px;
+	font-size: 70px;
 }
 
 #instructionsText {
@@ -53,6 +72,22 @@
 
 	position:absolute;
 	left:279px;
+	top:370px;
+	font-size: 30px;
+	padding: 10px;
+
+	background-color: black;
+	border: 2px solid #ffffff;
+}
+
+#tryAgainButton{
+
+	color:white;
+	font-family: PlayMeGames;
+	letter-spacing: 6px;
+
+	position:absolute;
+	left:290px;
 	top:370px;
 	font-size: 30px;
 	padding: 10px;

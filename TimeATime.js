@@ -279,7 +279,7 @@ function animate()
 //Run function
 function run() {
 
-    requestAnimationFrame(function() { run(); });
+    let request = requestAnimationFrame(function() { run(); });
     
     if(camera != null){
         // Render the scene
@@ -297,6 +297,16 @@ function run() {
         player.playerObject.position.copy(testCubeBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
+
+        //If the player has fallen from the map
+        if(player.playerObject.position.y < -5){
+            //The player dies and the game over screen appears
+            this.death();
+            //The next request animation frame is cancelled
+            window.cancelAnimationFrame(request);
+            //The function ends
+            return;
+        }
     }
     
 
@@ -317,7 +327,6 @@ function run() {
         //The position of the player character needs to be the same as the position of their cannon body
         turtle.mesh.position.copy(turtleBody.position);
     }
-
 
     // Spin
     animate();
@@ -400,16 +409,16 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.blue);
 
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
-    create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -40, z: 0}, materials.level1);
-    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -40, z: 0}, materials.water); //Water
-    create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -40, z: 0}, materials.level1);
-    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: -35, z: 0}, materials.level1);
-    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: -35, z: 0}, materials.level1);
-    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -40, z: 0}, materials.water); //Water
-    create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -40, z: 0}, materials.level1);
-    create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -40, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -40, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -40, z: 0}, materials.orange);
+    create_ground({x: 8, y: 2, z: 5}, {x: -204, y: -2, z: 0}, materials.level1);
+    create_ground({x: 12, y: 2, z: 5}, {x: 206, y: -2, z: 0}, materials.water); //Water
+    create_ground({x: 6, y: 2, z: 5}, {x: 215, y: -2, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 226, y: 3, z: 0}, materials.level1);
+    create_ground({x: 2, y: 1, z: 5}, {x: 237, y: 3, z: 0}, materials.level1);
+    create_ground({x: 32, y: 2, z: 5}, {x: 234, y: -2, z: 0}, materials.water); //Water
+    create_ground({x: 10, y: 2, z: 5}, {x: 255, y: -2, z: 0}, materials.level1);
+    create_ground({x: 8, y: 2, z: 5}, {x: 264, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 281, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 293, y: -2, z: 0}, materials.orange);
 
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
@@ -466,8 +475,8 @@ function load_turtle()
 
     turtle.load3dModel(objurl, mtlurl);
 
-    turtleMesh.position.set( 1, -35, 0 );
-    turtleBody.position.set( 1, -35, 0 );
+    turtleMesh.position.set( 1, 0, 0 );
+    turtleBody.position.set( 1, 0, 0 );
     scene.add(turtle.mesh);
 }
 
@@ -489,8 +498,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 0, -35, 0 );
-    testCubeBody.position.set( 0, -35, 0 );
+    ghostMesh.position.set( 0, 0, 0 );
+    testCubeBody.position.set( 0, 0, 0 );
 
     testCube.body.addEventListener("collide",function(e){
         console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
@@ -499,7 +508,7 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
-                testCubeBody.position.set( 6, -35, 0 );
+                testCubeBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
                     turtle.mesh.scale.x = 1; 
@@ -548,7 +557,7 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
-                testCubeBody.position.set( 55, -35, 0 );
+                testCubeBody.position.set( 255, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
                     turtle.mesh.scale.x = 1; 
@@ -575,8 +584,8 @@ function create_portals(){ //Create many portals
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
     create_portal(NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
-    create_portal(COLORMAP, NOISEMAP, {x: 6, y: -35, z: 0})
-    create_portal(COLORMAP, NOISEMAP, {x: 55, y: -35, z: 0})
+    create_portal(COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
+    create_portal(COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
     create_portal(NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
 }
 
@@ -615,7 +624,31 @@ function create_portal(texture1, texture2, portalPosition) //Receive textures an
     scene.add(portal);
 }
 
+//Function to use when the player dies
+function death(){
 
+    let canvas = document.getElementById("webglcanvas");
+    canvas.width = 900; 
+    canvas.height = 600;
+
+    //The renderer is cleared
+    renderer.clear();
+
+    //All elements from the scene are deleted
+    while(scene.children.length > 0){ 
+        scene.remove(scene.children[0]); 
+    }
+    scene = null;
+
+    //All elements from the world are deleted
+    while(world.bodies.length > 0){ 
+        world.remove(world.bodies[0]); 
+    }
+    world=null;
+
+    //Toggle the game over screen
+    toggleGameOver();
+}
 
 addPhysicalBody = function (mesh, bodyOptions, collision) {
     var shape;

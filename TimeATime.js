@@ -5,7 +5,7 @@ let keysDown = {
     "ArrowLeft":false,
     "ArrowRight":false,
     "Space":false,
-    "keyG" : false
+    "keyG" : false,
 };
 
 //Class for the character that the player controls
@@ -40,7 +40,6 @@ class Player
             });
             
         });
-
     }
 
 
@@ -58,7 +57,7 @@ class Player
 
     //Add velocity in 'y' to the player so they jump
     jump(){
-        this.body.velocity.y += 20;
+        this.body.velocity.y += 10;
     }
 
     //The player character is updated according to the keys that the player is pressing
@@ -81,8 +80,12 @@ class Player
 
 class Turtle
 {
-    constructor()
+    constructor(mesh, body, speed = 0.1)
     {
+        this.mesh = mesh;
+        this.body = body;
+        this.speed = speed;
+        this.grabbed = false;
         this.turtleObject = null;
     }
 
@@ -109,6 +112,18 @@ class Turtle
             });
         });
     }
+
+    grab(){
+        this.body.position.y += 0.1;
+        this.body.mass = 0;
+        turtle.grabbed = true;
+    }
+
+    ungrab(){
+        this.body.position.y -= 0;
+        this.body.mass = 1;
+        turtle.grabbed = false;
+    }
 }
 
 
@@ -121,7 +136,6 @@ mtlLoader = null,
 objLoader = null,
 canvas = null;
 player = null; //Object for the player
-turtle = null; //Object for the turtle
 playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 sphereShape = null;
@@ -132,8 +146,8 @@ testPortalBody = null;
 testCube = null;
 testCubeBody = null;
 //turtle
-testCube2 = null;
-testCubeBody2 = null;
+turtle = null; //Object for the turtle
+turtleBody = null;
 
 //Level 1 Ground 1
 level1Grounds = [];
@@ -218,6 +232,8 @@ function animate()
         //     console.log("Bi: 000000000000000000")
         // } else if (contact.bi.id == 3){
         //     console.log("Bi: 333333333333333")
+        // } else if (contact.bi.id == 4){
+        //     console.log("Bi: 4444444444444444444")
         // } 
         
     })
@@ -237,7 +253,6 @@ function run() {
     //Update the player character
     // player.update();
     testCube.update();
-    testCube2.update();
 
     if(player.playerObject != null){
         //make camera follow the player
@@ -248,12 +263,15 @@ function run() {
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
     }
+    
 
     if(turtle.turtleObject != null){
+        console.log(turtle.grabbed);
+        turtle.body.velocity.z = 0;
         //The position of the player character needs to be the same as the position of their cannon body
-        turtle.turtleObject.position.copy(testCubeBody2.position);
+        turtle.turtleObject.position.copy(turtleBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
-        testCube2.mesh.position.copy(testCubeBody2.position);
+        turtle.mesh.position.copy(turtleBody.position);
     }
 
 
@@ -318,31 +336,22 @@ async function scene_setup(canvas)
 
     load_map()
 
-    // let geometry = new THREE.SphereGeometry(2, 36, 36);
-    // let testSphere = new THREE.Mesh(geometry, materialG1);
-    // testSphere.position.set( -9, 0, 0 );
-    // testSphere.rotation.x = Math.PI/1.7;
-
-    //Create cannon body
-    // addPhysicalBody(testSphere, {mass: 0});
-
-    // scene.add(testSphere);
-
 }
 
 function load_map(){ //Load level plane grounds (boxes)
-    //Create planes for the floor 1st Level
 
+    //Create planes for the floor 1st Level
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.level1);
-    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water);
+    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.level1);
     create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.level1);
     create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.level1);
-    create_ground({x: 10, y: 2, z: 5}, {x: 54, y: -2, z: 0}, materials.level1);
-    create_ground({x: 8, y: 2, z: 5}, {x: 63, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 80, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 92, y: -2, z: 0}, materials.orange);
+    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water); //Water
+    create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.level1);
+    create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.orange);
 
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
@@ -385,23 +394,23 @@ function innitCannon(){
 
 function load_turtle()
 {
-    turtle = new Turtle();
     objurl = "models/Turtle.obj";
     mtlurl = "models/Turtle.mtl";
+
+    //Create turtle mesh
+    let turtleGeometry = new THREE.BoxGeometry(1, 0.5, 1);
+    let turtleMaterial = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0} );
+    let turtleMesh = new THREE.Mesh(turtleGeometry, turtleMaterial);
+
+    //Create turtle object
+    turtleBody = addPhysicalBody(turtleMesh, {mass: 1})
+    turtle = new Turtle(turtleMesh, turtleBody, 0.1);
+
     turtle.load3dModel(objurl, mtlurl);
 
-    let turtle_geometry = new THREE.BoxGeometry(1, 0.5, 1);
-    let material2 = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0} );
-    let cubeMesh2 = new THREE.Mesh(turtle_geometry, material2);
-    //Create turtle object
-    testCubeBody2 = addPhysicalBody(cubeMesh2, {mass: 1})
-    testCube2 = new Cube(cubeMesh2, testCubeBody2, 0.1);
-
-    cubeMesh2.position.set( 1, 1, 0 );
-    testCubeBody2.position.set( 1, 1, 0 );
-
-    scene.add(testCube.mesh);
-    scene.add(testCube2.mesh);
+    turtleMesh.position.set( 1, 1, 0 );
+    turtleBody.position.set( 1, 1, 0 );
+    scene.add(turtle.mesh);
 }
 
 function load_ghost()
@@ -415,14 +424,14 @@ function load_ghost()
 
     player.load3dModel(objModelUrl, mtlModelUrl);
 
-    let box_geometry = new THREE.BoxGeometry(1, 1, 1);
-    let material = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
-    let cubeMesh = new THREE.Mesh(box_geometry, material);
+    let ghostGeometry = new THREE.BoxGeometry(1, 1, 1);
+    let ghostMaterial = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
+    let ghostMesh = new THREE.Mesh(ghostGeometry , ghostMaterial);
     //Create player object
-    testCubeBody = addPhysicalBody(cubeMesh, {mass: 1})
-    testCube = new Cube(cubeMesh, testCubeBody, 0.1);
+    testCubeBody = addPhysicalBody(ghostMesh, {mass: 1})
+    testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    cubeMesh.position.set( 0, 1, 0 );
+    ghostMesh.position.set( 0, 1, 0 );
     testCubeBody.position.set( 0, 1, 0 );
 
     testCube.body.addEventListener("collide",function(e){
@@ -430,7 +439,52 @@ function load_ghost()
         if(e.body.id > 1){
             testCube.canJump = true;
         }
+        // if(e.body.id == 1){
+        //     console.log(1);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 2){
+        //     console.log(2);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 3){
+        //     console.log(3);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 4){
+        //     console.log(4);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 5){
+        //     console.log(5);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 6){
+        //     console.log(6);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 7){
+        //     console.log(7);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 8){
+        //     console.log(8);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 9){
+        //     console.log(9);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 10){
+        //     console.log(10);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 11){
+        //     console.log(11);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 12){
+        //     console.log(12);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 13){
+        //     console.log(13);
+        //     testCube.canJump = true;
+        // } else if (e.body.id == 14){
+        //     console.log(14);
+        //     testCube.canJump = true;
+        // }
     });
+
+    scene.add(testCube.mesh);
 
 }
 
@@ -551,7 +605,14 @@ class Cube
                 this.canJump = false;
             }
         }
-
+        if(keysDown["KeyG"]){
+            //If the player is not currently jumping
+            if(!turtle.grabbed){
+                turtle.grab();
+            } else if (turtle.grabbed) {
+                turtle.ungrab();
+            }
+        }
     }
 }
 

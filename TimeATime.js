@@ -14,7 +14,7 @@ class Player
     constructor()
     {
         this.speed = 0.1;
-        this.playerObject = new THREE.Object3D;
+        this.playerObject = null;
     }
     
     load3dModel(objModelUrl, mtlModelUrl)
@@ -24,7 +24,7 @@ class Player
         mtlLoader.load(mtlModelUrl, materials =>{
             
             materials.preload();
-            console.log(materials);
+            //console.log(materials);
 
             objLoader = new THREE.OBJLoader();
             
@@ -32,12 +32,10 @@ class Player
 
             objLoader.load(objModelUrl, object=>{
                 object.position.y = 0;
-                //object.rotation.y = Math.PI/2;
+                object.rotation.y = Math.PI/2;
                 object.scale.set(0.2, 0.2, 0.2);
                 this.playerObject = object;
-                console.log(object);
-
-                this.playerObject.add(pivot);
+                //console.log("Player", this.playerObject);
                 scene.add(object);
             });
             
@@ -124,9 +122,7 @@ objLoader = null,
 canvas = null;
 player = null; //Object for the player
 turtle = null; //Object for the turtle
-root = null;
 playerBody = null; //Object for the cannon body of the player
-pivot = null;
 world = null; //Object for the cannon world
 sphereShape = null;
 physicsMaterial = null;
@@ -222,7 +218,10 @@ function run() {
     // player.update();
     testCube.update();
 
+
     if(player.playerObject != null){
+        //make camera follow the player
+        camera.lookAt(player.playerObject.position);
         //The position of the player character needs to be the same as the position of their cannon body
         player.playerObject.position.copy(testCubeBody.position);
         //The position of the portal character needs to be the same as the position of their cannon body
@@ -277,21 +276,22 @@ async function scene_setup(canvas)
     keyEvents();
 
     // Add  a camera so we can view the scene
-    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    camera.position.set(20, 3, 150);
+    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
+    camera.position.set(0, 3, 50);
 
     //Create a pivot and add it to the mesh of the player
     pivot = new THREE.Object3D;
     //Add the camera to the pivot so it follows the player
-    pivot.add(camera);
+    
 
     //Create the player character
     await load_ghost();
-
-
-    await load_cube();
     //Create turtle character
     await load_turtle();
+
+    //Create physics body for both the turtle and the ghost
+    await load_cube();
+
     
     //Create planes for the floor 1st Level
     const groundGeometry1 = new THREE.BoxGeometry(10, 2, 5 );

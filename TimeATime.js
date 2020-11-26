@@ -193,12 +193,46 @@ function init(canvas) //Make canvas full length of screen
 //Listeners for the movement of the player
 function keyEvents(){
 
+    var keyhandler = true;
+
     document.addEventListener("keyup", event=>{
         keysDown[event.code] = false;
+
+        //When user releases 'G' letter, the key handler is set to true
+        if(event.code == "KeyG"){
+            keyhandler = true;
+        }
+
     });
        
     document.addEventListener("keydown", event=>{
         keysDown[event.code] = true;  
+    }); 
+
+    document.addEventListener("keypress", event=>{
+
+        if(event.code == "KeyG"){
+
+            //If key handler is true
+            if(keyhandler){
+
+                //Set it to false
+                keyhandler = false;
+                
+                //Grab or ungrab the turtle
+                if(turtle != null){
+                    if(!turtle.grabbed){
+                        turtle.grab();
+                    }
+                    else{
+                        turtle.ungrab();
+                    }
+                }
+                
+            }
+        }
+
+        
     }); 
 } 
 
@@ -605,14 +639,14 @@ class Cube
                 this.canJump = false;
             }
         }
-        if(keysDown["KeyG"]){
+        /*if(keysDown["KeyG"]){
             //If the player is not currently jumping
             if(!turtle.grabbed){
                 turtle.grab();
             } else if (turtle.grabbed) {
                 turtle.ungrab();
             }
-        }
+        }*/
     }
 }
 

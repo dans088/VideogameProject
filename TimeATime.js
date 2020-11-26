@@ -1,20 +1,19 @@
-
 //Movement keys (Controls for the game)
 let keysDown = {
     "KeyA":false,
     "KeyD":false,
     "ArrowLeft":false,
     "ArrowRight":false,
-    "Space":false
+    "Space":false,
+    "keyG" : false
 };
 
 //Class for the character that the player controls
 class Player
 {
-    constructor(root)
+    constructor()
     {
         this.speed = 0.1;
-        this.root = root;
         this.playerObject = null;
     }
     
@@ -25,26 +24,25 @@ class Player
         mtlLoader.load(mtlModelUrl, materials =>{
             
             materials.preload();
-            // console.log(materials);
+            //console.log(materials);
 
             objLoader = new THREE.OBJLoader();
             
             objLoader.setMaterials(materials);
 
             objLoader.load(objModelUrl, object=>{
-                objectList.push(object);
                 object.position.y = 0;
+                object.rotation.y = Math.PI/2;
                 object.scale.set(0.2, 0.2, 0.2);
                 this.playerObject = object;
-                // console.log(object);
-                pivot.add(this.root);
+                //console.log("Player", this.playerObject);
                 scene.add(object);
-
-                this.playerObject.add(pivot);
             });
-
+            
         });
+
     }
+
 
     //Move position of the player to the left
     moveLeft()
@@ -81,18 +79,50 @@ class Player
     // }
 }
 
+class Turtle
+{
+    constructor()
+    {
+        this.turtleObject = null;
+    }
+
+
+    load3dModel(objModelUrl, mtlModelUrl)
+    {
+        mtlLoader = new THREE.MTLLoader();
+
+        mtlLoader.load(mtlModelUrl, materials =>{
+            
+            materials.preload();
+            // console.log(materials);
+
+            objLoader = new THREE.OBJLoader();
+            
+            objLoader.setMaterials(materials);
+
+            objLoader.load(objModelUrl, object=>{
+                object.position.y = -0.8;
+                object.scale.set(1, 1, 1);
+                object.rotation.y = Math.PI/2;
+                this.turtleObject = object;
+                scene.add(object);
+            });
+        });
+    }
+}
+
+
+
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,
 uniforms = null,
 mtlLoader = null,
 objLoader = null,
-objectList = [],
 canvas = null;
 player = null; //Object for the player
-root = null;
+turtle = null; //Object for the turtle
 playerBody = null; //Object for the cannon body of the player
-pivot = null;
 world = null; //Object for the cannon world
 sphereShape = null;
 physicsMaterial = null;
@@ -101,11 +131,12 @@ testPortalBody = null;
 //Test moving cube
 testCube = null;
 testCubeBody = null;
+//turtle
+testCube2 = null;
+testCubeBody2 = null;
 
 //Level 1 Ground 1
 level1Grounds = [];
-ground1 = null;
-ground1Body = null;
 
 //Materials to be used on meshes
 materials = {
@@ -157,24 +188,6 @@ function keyEvents(){
     }); 
 } 
 
-//Promise to load the 3d object
-function promisifyLoader ( loader, onProgress ) 
-{
-    function promiseLoader ( url ) {
-  
-      return new Promise( ( resolve, reject ) => {
-  
-        loader.load( url, resolve, onProgress, reject );
-  
-      } );
-    }
-  
-    return {
-      originalLoader: loader,
-      load: promiseLoader,
-    };
-}
-
 //Animate function
 function animate() 
 {
@@ -183,12 +196,12 @@ function animate()
     currentTime = now;
     let fract = deltat / duration;
    
-    //uniforms.time.value += fract;
+    uniforms.time.value += fract;
 
     world.step(1/60);
 
     // console.log(world.contacts);
-    // console.log(testCube.canJump)
+    //console.log(testCube.canJump)
 
     world.contacts.forEach(function (contact) {
         // console.log(contact);
@@ -224,18 +237,32 @@ function run() {
     //Update the player character
     // player.update();
     testCube.update();
+    testCube2.update();
 
     if(player.playerObject != null){
+        //make camera follow the player
+        camera.lookAt(player.playerObject.position);
+        camera.position.x = player.playerObject.position.x;
         //The position of the player character needs to be the same as the position of their cannon body
         player.playerObject.position.copy(testCubeBody.position);
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
     }
 
+    if(turtle.turtleObject != null){
+        //The position of the player character needs to be the same as the position of their cannon body
+        turtle.turtleObject.position.copy(testCubeBody2.position);
+        //The position of the player character needs to be the same as the position of their cannon body
+        testCube2.mesh.position.copy(testCubeBody2.position);
+    }
+
+
     // Spin
     animate();
 
 }
+
+
 
 //Function that creates the scene
 async function scene_setup(canvas)
@@ -266,18 +293,28 @@ async function scene_setup(canvas)
     keyEvents();
 
     // Add  a camera so we can view the scene
-    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    camera.position.set(20, 3, 150);
-
-    //Create the player character
-    await load_ghost();
-    await load_cube();
+    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
+    camera.position.set(0, 0, 30);
 
     //Create a pivot and add it to the mesh of the player
     pivot = new THREE.Object3D;
-
     //Add the camera to the pivot so it follows the player
-    pivot.add(camera);
+    
+
+    //Create the player character
+    await load_ghost();
+    //Create turtle character
+    await load_turtle();
+
+    //Create physics body for both the turtle and the ghost
+    await load_cube();
+
+    
+    //Create planes for the floor 1st Level
+    const groundGeometry1 = new THREE.BoxGeometry(10, 2, 5 );
+    const materialG1 = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    testGround = new THREE.Mesh( groundGeometry1, materialG1 );
+    testGround.position.set(0,-2,0);
 
     load_map()
 
@@ -346,13 +383,31 @@ function innitCannon(){
     world.broadphase = new CANNON.NaiveBroadphase();
 }
 
+function load_turtle()
+{
+    turtle = new Turtle();
+    objurl = "models/Turtle.obj";
+    mtlurl = "models/Turtle.mtl";
+    turtle.load3dModel(objurl, mtlurl);
+
+    let turtle_geometry = new THREE.BoxGeometry(1, 0.5, 1);
+    let material2 = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0} );
+    let cubeMesh2 = new THREE.Mesh(turtle_geometry, material2);
+    //Create turtle object
+    testCubeBody2 = addPhysicalBody(cubeMesh2, {mass: 1})
+    testCube2 = new Cube(cubeMesh2, testCubeBody2, 0.1);
+
+    cubeMesh2.position.set( 1, 1, 0 );
+    testCubeBody2.position.set( 1, 1, 0 );
+
+    scene.add(testCube.mesh);
+    scene.add(testCube2.mesh);
+}
 
 function load_ghost()
 { 
-    root = new THREE.Object3D;
-
     //Create player object
-    player = new Player(root);
+    player = new Player();
 
     //load ghost object
     let objModelUrl = "models/Ghost.obj";
@@ -360,7 +415,23 @@ function load_ghost()
 
     player.load3dModel(objModelUrl, mtlModelUrl);
 
-   
+    let box_geometry = new THREE.BoxGeometry(1, 1, 1);
+    let material = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
+    let cubeMesh = new THREE.Mesh(box_geometry, material);
+    //Create player object
+    testCubeBody = addPhysicalBody(cubeMesh, {mass: 1})
+    testCube = new Cube(cubeMesh, testCubeBody, 0.1);
+    
+    cubeMesh.position.set( 0, 1, 0 );
+    testCubeBody.position.set( 0, 1, 0 );
+
+    testCube.body.addEventListener("collide",function(e){
+        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
+        if(e.body.id > 1){
+            testCube.canJump = true;
+        }
+    });
+
 }
 
 function create_portal()
@@ -484,31 +555,14 @@ class Cube
     }
 }
 
+
+
+
 function load_cube()
 {
-    let box_geometry = new THREE.BoxGeometry(1, 1, 1);
-    let material = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0, transparent: true} );
     
-    let cubeMesh = new THREE.Mesh(box_geometry, material);
 
-    //Create player object
-    testCubeBody = addPhysicalBody(cubeMesh, {mass: 1})
-    testCube = new Cube(cubeMesh, testCubeBody, 0.1);
 
-    testCubeBody.position.set( 0, 1, 0 );
-    cubeMesh.position.set( 0, 1, 0 );
-
-    // world.addBody(testCube.body);
-    scene.add(testCube.mesh);
-
-    testCube.body.addEventListener("collide",function(e){
-        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
-        if(e.body.id > 1){
-            testCube.canJump = true;
-        }
-    });
-
-   
 }
 
 // let uno = [0, 6, 12]

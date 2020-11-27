@@ -18,9 +18,17 @@ turtle = null; //turtle model
 group = null; //Object for the turtle
 turtleBody = null;
 transporthandler = true;
+sceneHandler = false; //boolean to change scene background
 
 //Level 1 Ground 1
 level1Grounds = [];
+
+//Load background images
+let futureUrl = "Images/future_texture.jpg";
+let pastUrl = "Images/past_texture.jpg";
+let futureTexture = new THREE.TextureLoader().load(futureUrl);
+let pastTexture = new THREE.TextureLoader().load(pastUrl);
+
 
 //Materials to be used on meshes
 materials = {
@@ -56,6 +64,24 @@ let duration = 5000; // ms
 let currentTime = Date.now();
 
 let TurtleAnimator = null;
+
+function change_scene(scene)
+{
+    if(!sceneHandler){
+        scene.background = futureTexture;
+    }else{
+        scene.background = pastTexture;
+    }
+}
+
+function toggleSceneHandler()
+{
+    if(sceneHandler){
+        sceneHandler = false;
+    }else{
+        sceneHandler = true;
+    }
+}
 
 
 function init(canvas) //Make canvas full length of screen
@@ -251,6 +277,8 @@ async function scene_setup(canvas)
 
     // Create a new Three.js scene
     scene = new THREE.Scene();
+
+    change_scene(scene);
 
     // Add light
     // Add a directional light to show off the object

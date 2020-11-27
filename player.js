@@ -190,6 +190,8 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
                 testCubeBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
@@ -207,6 +209,8 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
                 testCubeBody.position.set( 6, 3, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
@@ -223,6 +227,8 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
                 testCubeBody.position.set( 55, 3, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
@@ -239,6 +245,8 @@ function load_ghost()
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
                 testCubeBody.position.set( 255, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size

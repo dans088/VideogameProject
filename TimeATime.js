@@ -86,32 +86,57 @@ class Turtle
         this.body = body;
         this.speed = speed;
         this.grabbed = false;
+        this.animations = false;
+        this.grabAnimations = false;
         this.turtleObject = null;
     }
 
-
-    load3dModel(objModelUrl, mtlModelUrl)
+    promisifyLoader ( loader, onProgress ) 
     {
-        mtlLoader = new THREE.MTLLoader();
-
-        mtlLoader.load(mtlModelUrl, materials =>{
-            
-            materials.preload();
-            // console.log(materials);
-
-            objLoader = new THREE.OBJLoader();
-            
-            objLoader.setMaterials(materials);
-
-            objLoader.load(objModelUrl, object=>{
-                object.position.y = -0.8;
-                object.scale.set(1, 1, 1);
-                object.rotation.y = Math.PI/2;
-                this.turtleObject = object;
-                scene.add(object);
-            });
-        });
+        function promiseLoader ( url ) {
+    
+        return new Promise( ( resolve, reject ) => {
+    
+            loader.load( url, resolve, onProgress, reject );
+    
+        } );
+        }
+    
+        return {
+        originalLoader: loader,
+        load: promiseLoader,
+        };
     }
+
+
+    async loadObj(objModelUrl, group)
+    {
+        const objPromiseLoader = promisifyLoader(new THREE.OBJLoader());
+
+        try {
+            const object = await objPromiseLoader.load(objModelUrl.obj);
+            
+            object.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+
+            object.scale.set(0.007, 0.007, 0.007);
+            object.position.set(1, -1, 0);
+            object.rotation.y = Math.PI*2;
+            object.name = "Turtle";
+            this.turtleObject = object;
+            group.add(object);
+            console.log("Turtle:", group);
+            scene.add(group);
+        }
+        catch (err) {
+            return onError(err);
+        }
+    }
+   
 
     grab(){
         this.body.position.y += 0.1;
@@ -144,7 +169,8 @@ physicsMaterial = null;
 testCube = null;
 testCubeBody = null;
 //turtle
-turtle = null; //Object for the turtle
+turtle = null; //turtle model
+group = null; //Object for the turtle
 turtleBody = null;
 transporthandler = true;
 
@@ -183,6 +209,9 @@ materials = {
 
 let duration = 5000; // ms
 let currentTime = Date.now();
+
+let TurtleAnimator = null;
+
 
 function init(canvas) //Make canvas full length of screen
 {
@@ -246,7 +275,7 @@ function animate()
     currentTime = now;
     let fract = deltat / duration;
    
-    uniforms.time.value += fract;
+    //uniforms.time.value += fract;
 
     world.step(1/60);
 
@@ -289,6 +318,13 @@ function run() {
     //Update the player character
     testCube.update();
 
+    if(group!=null){
+        if(!turtle.animations){
+            playAnimations();
+            turtle.animations=true;
+        }
+    }
+
     if(player.playerObject != null){
         //make camera follow the player
         camera.lookAt(player.playerObject.position);
@@ -310,22 +346,40 @@ function run() {
     }
     
 
-    if(turtle && turtle.turtleObject != null){
+    if(turtle != null && turtle.turtleObject != null){
+        // Update the animations
+
         turtle.body.velocity.z = 0;
         distance = Math.abs(turtleBody.position.x - testCubeBody.position.x);
-        if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
-            turtleBody.position.x = testCubeBody.position.x + 1;
-            turtleBody.position.y = testCubeBody.position.y;
-            turtleBody.position.z = testCubeBody.position.z;
-        } else if (turtle.grabbed && turtleBody.position.x < testCubeBody.position.x && distance < 3){
-            turtleBody.position.x = testCubeBody.position.x - 1;
-            turtleBody.position.y = testCubeBody.position.y;
-            turtleBody.position.z = testCubeBody.position.z;
+
+        if(!turtle.grabAnimations){
+            KF.update();
         }
+
+        if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
+            turtle.grabAnimations=true;
+
+            turtleBody.position.x = testCubeBody.position.x + 1.5;
+            turtleBody.position.y = testCubeBody.position.y;
+            turtleBody.position.z = testCubeBody.position.z;
+
+        } else if (turtle.grabbed && turtleBody.position.x < testCubeBody.position.x && distance < 3){
+            turtle. grabAnimations=true;
+
+            turtleBody.position.x = testCubeBody.position.x - 1.5;
+            turtleBody.position.y = testCubeBody.position.y;
+            turtleBody.position.z = testCubeBody.position.z;
+
+            
+        }
+
         //The position of the player character needs to be the same as the position of their cannon body
-        turtle.turtleObject.position.copy(turtleBody.position);
+        group.position.copy(turtleBody.position);
+        group.position.x -=1;
+        group.position.y +=0.8;
         //The position of the player character needs to be the same as the position of their cannon body
         turtle.mesh.position.copy(turtleBody.position);
+        
     }
 
     // Spin
@@ -333,7 +387,7 @@ function run() {
 
 }
 
-
+const onError = ( ( err ) => { console.error( err ); } );
 
 //Function that creates the scene
 async function scene_setup(canvas)
@@ -365,20 +419,21 @@ async function scene_setup(canvas)
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
-    camera.position.set(0, 0, 30);
-
-    //Create a pivot and add it to the mesh of the player
-    pivot = new THREE.Object3D;
-    //Add the camera to the pivot so it follows the player
-    
+    camera.position.set(0, 0, 30);    
 
     //Create the player character
     await load_ghost();
+
     //Create turtle character
     await load_turtle();
 
+    //animation time in seconds
+    duration = 10;
+
     //Create physics body for both the turtle and the ghost
     await load_cube();
+
+    //console.log("Turtle:", group);
 
     
     //Create planes for the floor 1st Level
@@ -387,10 +442,102 @@ async function scene_setup(canvas)
     testGround = new THREE.Mesh( groundGeometry1, materialG1 );
     testGround.position.set(0,-2,0);
 
-    load_map()
+    load_map();
     create_portals();
-
 }
+
+function playAnimations()
+{
+    
+    TurtleAnimator = new KF.KeyFrameAnimator;
+    TurtleAnimator.init({ 
+        interps:
+            [
+                { 
+                    keys:[.7, .14, .28, .35, .42, .49, .56, .63, .7, .77, .84, .91, 1], 
+                    
+                    values:[
+                            { x: 206},
+                            { x: 207},
+                            { x: 208},
+                            { x: 209},
+                            { x: 210},
+                            { x: 211},
+                            { x: 212},
+                            { x: 211},
+                            { x: 210},
+                            { x: 209},
+                            { x: 208},
+                            { x: 207},
+                            { x: 206},
+                            ],
+                    
+                    target:turtleBody.position,
+                },
+                { 
+                    keys:[.7, .14, .28, .35, .42, .49, .56, .63, .7, .77, .84, .91, 1],
+                    
+                    values:[
+                        { y: 0},
+                        { y: 0},
+                        { y: 0},
+                        { y: 0},
+                        { y: 0},
+                        { y: 0},
+                        { y : Math.PI/2},
+                        { y: Math.PI},
+                        { y: Math.PI},
+                        { y: Math.PI},
+                        { y: Math.PI},
+                        { y: Math.PI/2},
+                        { y: 0},
+                        ],
+
+                    target:group.rotation,
+                },
+                { 
+                    keys:[0, .04, .08, .12, .16, .20, .24, .28, .32, .36, .40, .44, .48, .52, .56, .60, .64, .68, .72, .76, .80, .84, .88, .95, 1], 
+                    
+                    values:[
+                            { x: 0 , z : 0},
+                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: 0, z : 0},
+                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x:0, z : 0},
+                            { x: 0 , z : 0},
+                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: 0, z : 0},
+                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x:0, z: 0},
+                            { x: 0 , z : 0},
+                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: 0, z : 0},
+                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x:0, z : 0},
+                            { x: 0 , z : 0},
+                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: 0, z : 0},
+                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x:0, z : 0},
+                            { x: 0 , z : 0},
+                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: 0, z : 0},
+                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x:0, z : 0},
+                            ],
+                    target:group.rotation,
+                },
+            ],
+
+        loop: true,
+        duration:duration * 1000,     
+        easing:TWEEN.Easing.Linear.InOut,
+
+    });
+
+    TurtleAnimator.start();
+    
+} 
 
 function load_map(){ //Load level plane grounds (boxes)
 
@@ -457,28 +604,27 @@ function innitCannon(){
 
     world.gravity.set(0,-9.81,0);
     world.broadphase = new CANNON.NaiveBroadphase();
-
-    console.log("El mundooo:",world);
 }
 
 function load_turtle()
 {
-    objurl = "models/Turtle.obj";
-    mtlurl = "models/Turtle.mtl";
+    group  = new THREE.Object3D;
 
     //Create turtle mesh
     let turtleGeometry = new THREE.BoxGeometry(1, 0.5, 1);
     let turtleMaterial = new THREE.MeshBasicMaterial( {color: 0x00fff0, opacity: 0.0} );
     let turtleMesh = new THREE.Mesh(turtleGeometry, turtleMaterial);
 
+    let objModelUrl = {obj:'Models/Turtle2.obj'};
+
     //Create turtle object
     turtleBody = addPhysicalBody(turtleMesh, {mass: 1}, true)
     turtle = new Turtle(turtleMesh, turtleBody, 0.1);
 
-    turtle.load3dModel(objurl, mtlurl);
+    turtle.loadObj(objModelUrl, group);
 
-    turtleMesh.position.set( 1, 0, 0 );
-    turtleBody.position.set( 1, 0, 0 );
+    turtleMesh.position.set( 206, 0, 0 );
+    turtleBody.position.set( 206, 0, 0 );
     scene.add(turtle.mesh);
 }
 
@@ -518,7 +664,7 @@ function load_ghost()
                     turtle.mesh.scale.z = 1;
                     turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
-                    turtle.turtleObject.scale.set(1,1,1);
+                    turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
             
@@ -535,7 +681,7 @@ function load_ghost()
                     turtle.mesh.scale.z = 5;
                     turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
-                    turtle.turtleObject.scale.set(6,6,6);
+                    turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
         } else if(e.body.id == 24){
@@ -551,7 +697,7 @@ function load_ghost()
                     turtle.mesh.scale.z = 5; 
                     turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
-                    turtle.turtleObject.scale.set(6,6,6);
+                    turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
         }else if(e.body.id == 25){ // Arriba
@@ -567,7 +713,7 @@ function load_ghost()
                     turtle.mesh.scale.z = 1;
                     turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
-                    turtle.turtleObject.scale.set(1,1,1);
+                    turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
         } else if(e.body.id > 2 && e.body.id != 22 && e.body.id != 23 && e.body.id != 24){
@@ -641,11 +787,6 @@ function death(){
         scene.remove(scene.children[0]); 
     }
     scene = null;
-
-    console.log(world);
-
-    world.addBodyEvent.body.id=0;
-    world.nextId = 0;
 
     //All elements from the world are deleted
     while(world.bodies.length > 0){ 

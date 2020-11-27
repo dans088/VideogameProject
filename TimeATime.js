@@ -1,3 +1,8 @@
+const playerTag = 0;
+const turtleTag=3;
+const portalTag=20; //First portal
+const levelGroundTag=100; //First ground
+
 let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,

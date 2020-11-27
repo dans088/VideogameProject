@@ -21,7 +21,7 @@ function innitCannon(){
     world.broadphase = new CANNON.NaiveBroadphase();
 }
 
-addPhysicalBody = function (mesh, bodyOptions, collision) {
+addPhysicalBody = function (tag, mesh, bodyOptions, collision) {
     var shape;
     // create a Sphere shape for spheres and thorus knots,
     // a Box shape otherwise
@@ -44,7 +44,7 @@ addPhysicalBody = function (mesh, bodyOptions, collision) {
     // keep a reference to the mesh so we can update its properties later
     body.mesh = mesh;
 
-    //body.tag = tag;
+    body.tag = tag;
 
     world.addBody(body);
 

@@ -177,15 +177,15 @@ function load_ghost()
     let ghostMaterial = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
     let ghostMesh = new THREE.Mesh(ghostGeometry , ghostMaterial);
     //Create player object
-    testCubeBody = addPhysicalBody(ghostMesh, {mass: 1}, true)
+    testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
     ghostMesh.position.set( 0, 0, 0 );
     testCubeBody.position.set( 0, 0, 0 );
 
     testCube.body.addEventListener("collide",function(e){
-        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.id))
-        if(e.body.id == 22) { // Arriba Use body.Tag instead of id
+        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
+        if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){
                 //Set it to false
@@ -198,13 +198,13 @@ function load_ghost()
                     turtle.mesh.scale.x = 1; 
                     turtle.mesh.scale.y = 1;
                     turtle.mesh.scale.z = 1;
-                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
             
-        } else if(e.body.id == 23){
+        } else if(e.body.tag == (portalTag+1)){
             //If key handler is true
             if(transporthandler){
                 //Set it to false
@@ -217,12 +217,12 @@ function load_ghost()
                     turtle.mesh.scale.x = 5;
                     turtle.mesh.scale.y = 5;
                     turtle.mesh.scale.z = 5;
-                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
-        } else if(e.body.id == 24){
+        } else if(e.body.tag == (portalTag+2)){
             //If key handler is true
             if(transporthandler){
                 //Set it to false
@@ -235,12 +235,12 @@ function load_ghost()
                     turtle.mesh.scale.x = 5;
                     turtle.mesh.scale.y = 5;
                     turtle.mesh.scale.z = 5; 
-                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
-        }else if(e.body.id == 25){ // Arriba
+        }else if(e.body.tag == (portalTag+3)){ // Arriba
             //If key handler is true
             if(transporthandler){
                 //Set it to false
@@ -253,12 +253,12 @@ function load_ghost()
                     turtle.mesh.scale.x = 1; 
                     turtle.mesh.scale.y = 1;
                     turtle.mesh.scale.z = 1;
-                    turtleBody = addPhysicalBody(turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
-        } else if(e.body.id > 2 && e.body.id != 22 && e.body.id != 23 && e.body.id != 24){
+        } else if(e.body.tag >= levelGroundTag){
             testCube.canJump = true;
             transporthandler = true;
         }

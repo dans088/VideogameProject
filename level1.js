@@ -28,7 +28,7 @@ function load_map(){ //Load level plane grounds (boxes)
 
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
-        addPhysicalBody(level1Grounds[i], {mass: 0}, true);
+        addPhysicalBody(i+levelGroundTag, level1Grounds[i], {mass: 0}, true);
         scene.add(level1Grounds[i]);
     }
 }
@@ -46,13 +46,13 @@ function create_portals(){ //Create many portals
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
-    create_portal(NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
-    create_portal(COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
-    create_portal(COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
-    create_portal(NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
+    create_portal(0,NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
+    create_portal(1,COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
+    create_portal(2,COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
+    create_portal(3,NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
 }
 
-function create_portal(texture1, texture2, portalPosition) //Receive textures and position to create a portal
+function create_portal(portalCounter, texture1, texture2, portalPosition) //Receive textures and position to create a portal
 {
     //create shadermaterial for the portal 
 
@@ -81,7 +81,8 @@ function create_portal(texture1, texture2, portalPosition) //Receive textures an
     portal.rotation.x = Math.PI/2;
 
     //Create portal cannon body
-    addPhysicalBody(portal, {mass: 0}, false);
+    addPhysicalBody(portalTag + portalCounter,portal, {mass: 0}, false);
+    portalCounter+=1;
 
     //Add portal to scene
     scene.add(portal);

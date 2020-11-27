@@ -457,6 +457,8 @@ function innitCannon(){
 
     world.gravity.set(0,-9.81,0);
     world.broadphase = new CANNON.NaiveBroadphase();
+
+    console.log("El mundooo:",world);
 }
 
 function load_turtle()
@@ -639,6 +641,11 @@ function death(){
         scene.remove(scene.children[0]); 
     }
     scene = null;
+
+    console.log(world);
+
+    world.addBodyEvent.body.id=0;
+    world.nextId = 0;
 
     //All elements from the world are deleted
     while(world.bodies.length > 0){ 

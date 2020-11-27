@@ -258,7 +258,7 @@ function load_ghost()
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
-        } else if(e.body.tag >= levelGroundTag){
+        } else if(e.body.tag == levelGroundTag){
             testCube.canJump = true;
             transporthandler = true;
         }
@@ -274,6 +274,11 @@ function death(){
     let canvas = document.getElementById("webglcanvas");
     canvas.width = 900; 
     canvas.height = 600;
+
+    //color2 = new THREE.Color( 0x000000 );
+    scene.background = null;
+    scene.visibe = false;
+    console.log(scene);
 
     //The renderer is cleared
     renderer.clear();

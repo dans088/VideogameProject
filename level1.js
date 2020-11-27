@@ -28,7 +28,7 @@ function load_map(){ //Load level plane grounds (boxes)
 
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
-        addPhysicalBody(i+levelGroundTag, level1Grounds[i], {mass: 0}, true);
+        addPhysicalBody(levelGroundTag, level1Grounds[i], {mass: 0}, true);
         scene.add(level1Grounds[i]);
     }
 }

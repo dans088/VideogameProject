@@ -12,6 +12,7 @@
 
 #gameOverScreen{
 	color:white;
+	background-color: black;
 	font-family: PlayMeGames;
 	letter-spacing: 6px;
 }

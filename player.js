@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 596, 31.3, 0 );
-    testCubeBody.position.set( 596, 31.3, 0 );
+    ghostMesh.position.set( 460, 2.5, 0 );
+    testCubeBody.position.set( 460, 2.5, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -262,7 +262,7 @@ function load_ghost()
                 }
             }
         } 
-        else if(e.body.tag == (portalTag+4)){ // Arriba
+        else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
             //If key handler is true
             if(transporthandler){
                 //Set it to false
@@ -270,28 +270,66 @@ function load_ghost()
                 toggleSceneHandler();
                 change_scene(scene);
                 testCubeBody.position.set( 593, 31.3, 0 );
-               
             }
         }
-        else if(e.body.tag == (portalTag+5)){ // Arriba
+        else if(e.body.tag == (portalTag+5)){ //Portal with movement -> Third Portal First Part
             //If key handler is true
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 255, 3, 0 );
+                testCubeBody.position.set( 457, 2.5, 0 );
             }
         }
-        else if(e.body.tag == (portalTag+6)){ // Arriba
+        else if(e.body.tag == (portalTag+6)){ // First Portal Second part
             //If key handler is true
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 255, 3, 0 );
-    
+                testCubeBody.position.set( 395, 32, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+7)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 431, 20, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+8)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 431, 20, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+9)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 655, 12.8, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+10)){ //WIN
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 465, 2.5, 0 );
             }
         }
         else if(e.body.tag == levelGroundTag){

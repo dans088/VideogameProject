@@ -113,12 +113,14 @@ function create_portals(){ //Create many portals
     create_portal(3, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
     
     //Level 2
-    create_portal(4, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0}) //First portal
-    create_portal(5, NOISEMAP,COLORMAP, {x: 425, y: 27, z: 0}, true, 1) //Portal with movement
-    create_portal(6, NOISEMAP, COLORMAP, {x: 593, y: 31.3, z: 0})
-    // create_portal(NOISEMAP, COLORMAP, {x: 431, y: 18.5, z: 0})
-    create_portal(7, NOISEMAP, COLORMAP, {x: 631.3, y: 18.5, z: 0})
-    create_portal(8, NOISEMAP, COLORMAP, {x: 654.5, y: 12.8, z: 0})
+    create_portal(4, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0}) //First portal First Part-> 6
+    create_portal(5, NOISEMAP,COLORMAP, {x: 425, y: 27, z: 0}, true, 1) //Second Portal with movement First Part -> 8
+    create_portal(6, NOISEMAP, COLORMAP, {x: 593, y: 31.3, z: 0}) // First Portal Second part -> 4
+    create_portal(7, NOISEMAP, COLORMAP, {x: 631.3, y: 18.5, z: 0}) // Second Portal Second part -> 5
+    create_portal(8, NOISEMAP, COLORMAP, {x: 456, y: 2.5, z: 0}) // Third Portal First Part 
+    create_portal(9, NOISEMAP, COLORMAP, {x: 466, y: 2.5, z: 0}) // Fourth Portal First Part 
+    create_portal(10, NOISEMAP, COLORMAP, {x: 654.5, y: 12.8, z: 0}) // Third Portal Second Part
+    create_portal(11, NOISEMAP, COLORMAP, {x: 666, y: 12.8, z: 0}) // WIN
 }
 
 function create_portal(portalCounter, texture1, texture2, portalPosition, move_portal = false, radius = 1.5) //Receive textures and position to create a portal

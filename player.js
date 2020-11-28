@@ -180,11 +180,11 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 0, 0, 0 );
-    testCubeBody.position.set( 0, 0, 0 );
+    ghostMesh.position.set( 400, 30, 0 );
+    testCubeBody.position.set( 400, 30, 0 );
 
     testCube.body.addEventListener("collide",function(e){
-        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
+        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){

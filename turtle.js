@@ -49,7 +49,6 @@ class Turtle
             object.name = "Turtle";
             this.turtleObject = object;
             group.add(object);
-            console.log("Turtle:", group);
             scene.add(group);
         }
         catch (err) {

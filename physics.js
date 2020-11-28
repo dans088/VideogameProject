@@ -43,8 +43,17 @@ addPhysicalBody = function (tag, mesh, bodyOptions, collision) {
     body.collisionResponse = collision;
     // keep a reference to the mesh so we can update its properties later
     body.mesh = mesh;
-
     body.tag = tag;
+
+    // Lava can collide only with the player
+    if (tag >= 2000){ // Lava_ellipses tag
+        body.collisionFilterGroup = 1; //Assign to group 1
+        body.collisionFilterMask = 200; // It can only collide with group 200 (Player)
+    } else if (tag == 0){ // Player tag
+        body.collisionFilterGroup = 200; //Assign to group 200
+    } else if (tag >20 && tag < 40 || tag == 100){ // Portals and Ground tag
+        body.collisionFilterMask = 200; // It can only collide with group 200 (Player)
+    }
 
     world.addBody(body);
 

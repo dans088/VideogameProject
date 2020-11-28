@@ -26,6 +26,51 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 4, y: 2, z: 5}, {x: 281, y: -2, z: 0}, materials.orange);
     create_ground({x: 4, y: 2, z: 5}, {x: 293, y: -2, z: 0}, materials.orange);
 
+    // Create 2nd Level 
+    create_ground({x: 22, y: 2, z: 5}, {x: 400, y: -2, z: 0}, materials.purple);
+    create_ground({x: 12, y: 40, z: 5}, {x: 417, y: 17, z: 0}, materials.red); //Lava
+    create_ground({x: 18, y: 2, z: 5}, {x: 432, y: -2, z: 0}, materials.purple);
+    create_ground({x: 12, y: 40, z: 5}, {x: 447, y: 17, z: 0}, materials.red); // Lava
+    create_ground({x: 16, y: 2, z: 5}, {x: 461, y: -2, z: 0}, materials.purple);
+    
+    //Floating platforms Ordered by position y
+    //Left part
+    create_ground({x: 5, y: 1, z: 5}, {x: 403, y: 2.5, z: 0}, materials.purple);
+    create_ground({x: 4, y: 1, z: 5}, {x: 394, y: 3.5, z: 0}, materials.purple);
+    create_ground({x: 4, y: 1, z: 5}, {x: 394, y: 3.5, z: 0}, materials.purple);
+    create_ground({x: 2, y: 1, z: 5}, {x: 409, y: 5.5, z: 0}, materials.purple);
+    create_ground({x: 1.5, y: 1, z: 5}, {x: 398.5, y: 7.5, z: 0}, materials.purple);
+    create_ground({x: 1.5, y: 1, z: 5}, {x: 403.5, y: 9.5, z: 0}, materials.purple);
+    create_ground({x: 3.5, y: 1, z: 5}, {x: 393, y: 9.5, z: 0}, materials.purple);
+    create_ground({x: 1, y: 1, z: 5}, {x: 409.5, y: 12, z: 0}, materials.purple);
+    create_ground({x: 2, y: 1, z: 5}, {x: 392, y: 14, z: 0}, materials.purple);
+    create_ground({x: 4.5, y: 1, z: 5}, {x: 403, y: 15, z: 0}, materials.purple);
+    create_ground({x: 2.5, y: 1, z: 5}, {x: 398, y: 18, z: 0}, materials.purple);
+    create_ground({x: 1.8, y: 1, z: 5}, {x: 408.5, y: 19.5, z: 0}, materials.purple);
+    create_ground({x: 1, y: 1, z: 5}, {x: 391, y: 20.5, z: 0}, materials.purple);
+    create_ground({x: 1, y: 1, z: 5}, {x: 394, y: 20.5, z: 0}, materials.purple);
+    create_ground({x: 5.5, y: 1, z: 5}, {x: 402.5, y: 23.5, z: 0}, materials.purple);
+    create_ground({x: 4, y: 1, z: 5}, {x: 393, y: 28.3, z: 0}, materials.purple);
+    //Middle part
+    create_ground({x: 2.5, y: 1, z: 5}, {x: 427, y: 13, z: 0}, materials.purple);
+    create_ground({x: 3, y: 1, z: 5}, {x: 436, y: 14, z: 0}, materials.purple);
+    create_ground({x: 2, y: 1, z: 5}, {x: 431, y: 16, z: 0}, materials.purple);
+    create_ground({x: 1.5, y: 1, z: 5}, {x: 439, y: 17.5, z: 0}, materials.purple);
+    create_ground({x: 1.8, y: 1.5, z: 5}, {x: 426, y: 18.5, z: 0}, materials.purple);
+    create_ground({x: 2, y: 1.5, z: 5}, {x: 435, y: 21, z: 0}, materials.purple);
+    create_ground({x: 2, y: 1.5, z: 5}, {x: 435, y: 21, z: 0}, materials.purple);
+    create_ground({x: 1.7, y: 1, z: 5}, {x: 439, y: 24, z: 0}, materials.purple);
+    create_ground({x: 1.5, y: 1, z: 5}, {x: 430, y: 22.5, z: 0}, materials.purple);
+    create_ground({x: 1.5, y: 1, z: 5}, {x: 425, y: 24.5, z: 0}, materials.purple);
+
+    //Second part
+    create_ground({x: 38, y: 31.5, z: 5}, {x: 609, y: 13, z: 0}, materials.light_blue);
+    create_ground({x:6, y: 19, z: 5}, {x: 631, y: 6.75, z: 0}, materials.light_blue);
+    create_ground({x: 18, y: 31.5, z: 5}, {x: 643, y: 13, z: 0}, materials.light_blue);
+    create_ground({x: 18, y: 13, z: 5}, {x: 661, y: 3.7, z: 0}, materials.light_blue);
+    create_ground({x: 18, y: 8, z: 5}, {x: 661, y: 24.75, z: 0}, materials.light_blue);
+    create_ground({x: 80, y: 1, z: 5}, {x: 630, y: 34, z: 0}, materials.light_blue);
+
     //Add physical body to each mesh and add mesh to scene
     for(let i = 0; i<level1Grounds.length; i++){
         addPhysicalBody(levelGroundTag, level1Grounds[i], {mass: 0}, true);
@@ -46,13 +91,19 @@ function create_portals(){ //Create many portals
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
-    create_portal(0,NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
-    create_portal(1,COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
-    create_portal(2,COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
-    create_portal(3,NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
+    create_portal(0, NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
+    create_portal(1, COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
+    create_portal(2, COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
+    create_portal(3, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
+    create_portal(4, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0})
+    create_portal(5, NOISEMAP,COLORMAP, {x: 425, y: 27, z: 0}, true, 1) //Portal with movement
+    create_portal(6, NOISEMAP, COLORMAP, {x: 593, y: 31.3, z: 0})
+    // create_portal(NOISEMAP, COLORMAP, {x: 431, y: 18.5, z: 0})
+    create_portal(7, NOISEMAP, COLORMAP, {x: 631.3, y: 18.5, z: 0})
+    create_portal(8, NOISEMAP, COLORMAP, {x: 654.5, y: 12.8, z: 0})
 }
 
-function create_portal(portalCounter, texture1, texture2, portalPosition) //Receive textures and position to create a portal
+function create_portal(portalCounter, texture1, texture2, portalPosition, move_portal = false, radius = 1.5) //Receive textures and position to create a portal
 {
     //create shadermaterial for the portal 
 
@@ -75,15 +126,82 @@ function create_portal(portalCounter, texture1, texture2, portalPosition) //Rece
     } );
 
     //Create Portal mesh
-    let geometry = new THREE.SphereGeometry(1.5, 36, 36);
+    let geometry = new THREE.SphereGeometry(radius, 36, 36);
     let portal = new THREE.Mesh(geometry, material);
     portal.position.set( portalPosition.x, portalPosition.y, portalPosition.z );
     portal.rotation.x = Math.PI/2;
 
-    //Create portal cannon body
-    addPhysicalBody(portalTag + portalCounter,portal, {mass: 0}, false);
-    portalCounter+=1;
+    if(move_portal == true){
+        moving_portal.mesh = portal;
+        moving_portal.body = addPhysicalBody(portalTag + portalCounter, portal, {mass: 0}, false);
+        portalCounter+=1;
+    } else {
+        //Create portal cannon body
+        addPhysicalBody(portalTag + portalCounter, portal, {mass: 0}, false);
+        
+    }
+    
 
     //Add portal to scene
     scene.add(portal);
 }
+
+function create_enemies(){
+
+    let positions_x = [664, 666, 668]
+    let counter = 900;
+    
+    positions_x.forEach(position_x => {
+        //Create Portal mesh
+        let geometry = new THREE.SphereGeometry(0.7, 36, 36);
+        let enemy_mesh = new THREE.Mesh(geometry, materials.red);
+        enemy_mesh.position.set( position_x, 29.6, 0 );
+        //Create portal cannon body
+        enemy_body = addPhysicalBody(counter, enemy_mesh, {mass: 0}, false);
+        enemy_body.velocity.x = 1;
+        enemy = {mesh: enemy_mesh, body: enemy_body}
+        enemies.push(enemy);
+        //Add portal to scene
+        scene.add(enemy_mesh);
+        counter++;
+    })
+}
+
+function create_lava(){
+
+    let counter = 2000; 
+
+    let random_x1 = Math.floor(Math.random() * (409 - 390 + 1) + 390);
+    let random_x2 = Math.floor(Math.random() * (424 - 439 + 1) + 439);
+    let random_x3 = Math.floor(Math.random() * (454 - 468 + 1) + 468);
+
+    let random_xs = [random_x1, random_x2, random_x3];
+
+    random_xs.forEach(x => {
+        let path = new THREE.Shape();
+        path.absellipse(0,0,0.35,0.7,0, Math.PI*2, false,0);
+        let geometry = new THREE.ShapeBufferGeometry( path );
+        let ellipse_mesh = new THREE.Mesh( geometry, materials.orange );
+    
+        ellipse_mesh.position.set(x, 40, 0 );
+        let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true, 200);
+        ellipse = {mesh: ellipse_mesh , body: ellipse_body}
+        lava_ellipses.push(ellipse);
+        scene.add(ellipse_mesh);
+        counter++;
+    })
+}
+
+const lava_interval = setInterval(function() {
+    create_lava();
+  }, 5000);
+
+const portal_interval = setInterval(function() {
+    let portal_x_movement = ["DontMove", "MoveLeft", "MoveRight", "MoveLeft", "MoveRight"];
+    let portal_y_movement = ["DontMove", "MoveDown", "MoveUp", "MoveDown", "MoveUp"];
+    //Choose  random movement in x and y from the arrays
+    let random_x = Math.floor(Math.random() * 5);
+    let random_y = Math.floor(Math.random() * 5);
+    moving_portal.xMovement = portal_x_movement[random_x];
+    moving_portal.yMovement = portal_y_movement[random_y];
+  }, 3000);

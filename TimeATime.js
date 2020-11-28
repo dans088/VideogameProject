@@ -71,7 +71,7 @@ materials = {
     }),
 };
 
-let duration2 = 5000; // ms
+let portalduration = 5000; // ms
 let currentTime = Date.now();
 
 let TurtleAnimator = null;
@@ -155,7 +155,7 @@ function animate()
     let now = Date.now();
     let deltat = now - currentTime;
     currentTime = now;
-    let fract = deltat / duration2;
+    let fract = deltat / portalduration;
     uniformsArray.forEach(uniforms => {
         uniforms.time.value += fract;
     });
@@ -389,9 +389,5 @@ async function scene_setup(canvas)
 
     load_map();
     create_portals();
-<<<<<<< Updated upstream
     create_enemies();
-=======
-    
->>>>>>> Stashed changes
 }

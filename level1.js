@@ -91,7 +91,6 @@ function create_portals(){ //Create many portals
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
-<<<<<<< Updated upstream
     create_portal(0, NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
     create_portal(1, COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
     create_portal(2, COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
@@ -102,12 +101,6 @@ function create_portals(){ //Create many portals
     // create_portal(NOISEMAP, COLORMAP, {x: 431, y: 18.5, z: 0})
     create_portal(7, NOISEMAP, COLORMAP, {x: 631.3, y: 18.5, z: 0})
     create_portal(8, NOISEMAP, COLORMAP, {x: 654.5, y: 12.8, z: 0})
-=======
-    create_portal(0,NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0});
-    create_portal(1,COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0});
-    create_portal(2,COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0});
-    create_portal(3,NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0});
->>>>>>> Stashed changes
 }
 
 function create_portal(portalCounter, texture1, texture2, portalPosition, move_portal = false, radius = 1.5) //Receive textures and position to create a portal

@@ -281,7 +281,7 @@ function death(){
     console.log(scene);
 
     //The renderer is cleared
-    renderer.clear();
+    //renderer.clear();
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 

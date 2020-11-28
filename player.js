@@ -180,14 +180,14 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 460, 2.5, 0 );
-    testCubeBody.position.set( 460, 2.5, 0 );
+    ghostMesh.position.set( 1, 1, 0 );
+    testCubeBody.position.set(1, 1, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
         console.log(e.body.tag);
 
-        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
+        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){
@@ -198,9 +198,6 @@ function load_ghost()
                 testCubeBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
-                    turtle.mesh.scale.x = 1; 
-                    turtle.mesh.scale.y = 1;
-                    turtle.mesh.scale.z = 1;
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
@@ -216,11 +213,8 @@ function load_ghost()
                 change_scene(scene);
                 testCubeBody.position.set( 6, 3, 0 );
                 if(turtle.grabbed){
-                    // Increase turtle size
-                    turtle.mesh.scale.x = 5;
-                    turtle.mesh.scale.y = 5;
-                    turtle.mesh.scale.z = 5;
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
@@ -235,10 +229,19 @@ function load_ghost()
                 testCubeBody.position.set( 55, 3, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
-                    turtle.mesh.scale.x = 5;
-                    turtle.mesh.scale.y = 5;
-                    turtle.mesh.scale.z = 5; 
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    /*turtle.mesh.geometry.boundingBox.max.x *= 50;
+                    turtle.mesh.geometry.boundingBox.max.y *= 50;
+                    turtle.mesh.geometry.boundingBox.max.z *= 50;
+
+                    turtle.mesh.geometry.boundingBox.min.x *= 50;
+                    turtle.mesh.geometry.boundingBox.min.y *= 50;
+                    turtle.mesh.geometry.boundingBox.min.z *= 50;*/
+
+                    //turtle.mesh.scale.y = 5;
+                    //turtle.mesh.scale.z = 5; 
+
+                    
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
@@ -256,83 +259,40 @@ function load_ghost()
                     turtle.mesh.scale.x = 1; 
                     turtle.mesh.scale.y = 1;
                     turtle.mesh.scale.z = 1;
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
         } 
         else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 593, 31.3, 0 );
-            }
+            teleport({x: 393, y: 2.5, z: 0});
         }
-        else if(e.body.tag == (portalTag+5)){ //Portal with movement -> Third Portal First Part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 457, 2.5, 0 );
-            }
+        else if(e.body.tag == (portalTag+5)){ //Level 2 First portal
+            teleport({x: 593, y: 31.3, z: 0});
         }
-        else if(e.body.tag == (portalTag+6)){ // First Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 395, 32, 0 );
-            }
+        else if(e.body.tag == (portalTag+6)){ //Portal with movement -> Third Portal First Part
+            teleport({x: 457, y: 2.5, z: 0});
         }
-        else if(e.body.tag == (portalTag+7)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 431, 20, 0 );
-            }
+        else if(e.body.tag == (portalTag+7)){ // First Portal Second part
+            teleport({x: 395, y: 32, z: 0});
         }
         else if(e.body.tag == (portalTag+8)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 431, 20, 0 );
-            }
+            teleport({x: 431, y: 20, z: 0});
         }
         else if(e.body.tag == (portalTag+9)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 655, 12.8, 0 );
-            }
+            teleport({x: 431, y: 20, z: 0});
         }
-        else if(e.body.tag == (portalTag+10)){ //WIN
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 465, 2.5, 0 );
-            }
+        else if(e.body.tag == (portalTag+10)){ // Second Portal Second part
+            teleport({x: 655, y: 12.8, z: 0});
         }
-        else if(e.body.tag == levelGroundTag){
+        else if(e.body.tag == (portalTag+11)){ 
+            teleport({x: 465, y: 2.5, z: 0});
+        }
+        else if(e.body.tag == (portalTag+12)){ //WIN
+            win();
+        }
+        else if(e.body.tag == levelGroundTag || e.body.tag == turtleTag){
             testCube.canJump = true;
             transporthandler = true;
         }
@@ -340,14 +300,43 @@ function load_ghost()
         //If the player touches an enemy or a lava drop, they die
         else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
             window.cancelAnimationFrame(request);
-            clearInterval(lava_interval);
-            clearInterval(portal_interval);
             death(); 
         }
     });
 
     scene.add(testCube.mesh);
 
+}
+
+function teleport(position){ // Teleport player to new position
+    //If key handler is true
+    if(transporthandler){
+        //Set it to false
+        transporthandler = false;
+        toggleSceneHandler();
+        change_scene(scene);
+        testCubeBody.position.set(position.x, position.y, position.z );
+    }
+}
+
+function teleport_with_turtle(position, meshScale, bodyScale){ // Teleport player and scale turtle 
+    //If key handler is true
+    if(transporthandler){
+        //Set it to false
+        transporthandler = false;
+        toggleSceneHandler();
+        change_scene(scene);
+        testCubeBody.position.set( position.x, position.y, position.z );
+        if(turtle.grabbed){
+            //Return to orginal size
+            turtle.mesh.scale.x = meshScale; 
+            turtle.mesh.scale.y = meshScale;
+            turtle.mesh.scale.z = meshScale;
+            turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+            turtleBody.position.copy(testCubeBody.position);
+            turtle.turtleObject.scale.set(bodyScale, bodyScale, bodyScale);
+        }
+    }
 }
 
 //Function to use when the player dies
@@ -357,7 +346,8 @@ function death(){
     canvas.width = 900; 
     canvas.height = 600;
 
-    console.log(scene);
+    clearInterval(lava_interval);
+    clearInterval(portal_interval);
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 
@@ -371,6 +361,37 @@ function death(){
     }
     world=null;
 
+    enemies = []
+
     //Toggle the game over screen
     toggleGameOver();
+}
+
+//Function to use when the player wins
+function win(){
+
+    let canvas = document.getElementById("webglcanvas");
+    canvas.width = 900; 
+    canvas.height = 600;
+
+    window.cancelAnimationFrame(request);
+    clearInterval(lava_interval);
+    clearInterval(portal_interval);
+
+    //All elements from the scene are deleted
+    while(scene.children.length > 0){ 
+        scene.remove(scene.children[0]); 
+    }
+    scene = null;
+
+    //All elements from the world are deleted
+    while(world.bodies.length > 0){ 
+        world.remove(world.bodies[0]); 
+    }
+    world=null;
+
+    enemies = []
+
+    //Toggle the game over screen
+    toggleWin();
 }

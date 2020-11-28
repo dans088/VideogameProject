@@ -175,12 +175,12 @@ function load_turtle()
     let objModelUrl = {obj:'Models/Turtle2.obj'};
 
     //Create turtle object
-    turtleBody = addPhysicalBody(turtleTag,turtleMesh, {mass: 1}, true)
+    turtleBody = addPhysicalBody(turtleTag, turtleMesh, {mass: 1}, true)
     turtle = new Turtle(turtleMesh, turtleBody, 0.1);
 
     turtle.loadObj(objModelUrl, group);
 
-    turtleMesh.position.set( 206, 0, 0 );
-    turtleBody.position.set( 206, 0, 0 );
+    turtleMesh.position.set( 206, 10, 0 );
+    turtleBody.position.set( 206, 10, 0 );
     scene.add(turtle.mesh);
 }

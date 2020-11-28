@@ -9,32 +9,32 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.blue);
     create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water,"water"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.blue);
-    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
+    //create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
     create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
-    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
+    //create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 83.5, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 100, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 87, y: -2, z: 0}, materials.blue);
+    //create_ground({x: 4, y: 2, z: 5}, {x: 90, y: -2, z: 0}, materials.blue);
     //Position
-    create_trap({x: 68.7, y: -3, z: 0}); //Create peaks that kill the user
-    create_trap({x: 85.7, y: -3, z: 0}); //Create peaks that kill the user
+    create_trap({x: 68, y: -3, z: 0}); //Create peaks that kill the user
+    //create_trap({x: 85.7, y: -3, z: 0}); //Create peaks that kill the user
 
     //Second Part First Level
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -204, y: -2, z: 0}, materials.level1);
     create_ground({x: 12, y: 2, z: 5}, {x: 206, y: -2, z: 0}, materials.water, "ground"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 215, y: -2, z: 0}, materials.level1);
-    create_ground({x: 2, y: 1, z: 5}, {x: 226, y: 3, z: 0}, materials.level1);
-    //Position
+    create_ground({x: 2, y: 1, z: 5}, {x: 225, y: 3, z: 0}, materials.level1);
+    //Positio
     create_trap({x: 269, y: -3, z: 0}); //Create peaks that kill the user
-    create_trap({x: 288, y: -3, z: 0}); //Create peaks that kill the user
+    //create_trap({x: 288, y: -3, z: 0}); //Create peaks that kill the user
 
     create_ground({x: 2, y: 1, z: 5}, {x: 237, y: 3, z: 0}, materials.level1);
     create_ground({x: 10, y: 2, z: 5}, {x: 255, y: -2, z: 0}, materials.level1);
     create_ground({x: 8, y: 2, z: 5}, {x: 264, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 285, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 304, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 287, y: -2, z: 0}, materials.orange);
+    //create_ground({x: 4, y: 2, z: 5}, {x: 304, y: -2, z: 0}, materials.orange);
     
     // Create 2nd Level 
     create_ground({x: 22, y: 2, z: 5}, {x: 400, y: -2, z: 0}, materials.purple);
@@ -112,7 +112,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
 }
 
 function create_trap(position){
-    let finalPoistion = (0.4 * 2 * 15) + position.x;
+    let finalPoistion = (0.4 * 2 * 20) + position.x;
     for(let i = position.x; i< finalPoistion; i += 0.8){
         const geometry = new THREE.ConeGeometry( 0.4, 3, 10 );
         const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
@@ -133,7 +133,7 @@ function create_portals(){ //Create many portals
     create_portal(1, COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
     create_portal(2, COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
     create_portal(3, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
-    create_portal(4, NOISEMAP, COLORMAP, {x: 110, y: 3, z: 0}) // Go to Second Level
+    create_portal(4, NOISEMAP, COLORMAP, {x: 90, y: 3, z: 0}) // Go to Second Level
     
     //Level 2
     create_portal(5, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0}) //First portal First Part-> 6

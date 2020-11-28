@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 1, 1, 0 );
-    testCubeBody.position.set(1, 1, 0 );
+    ghostMesh.position.set( -3, 1, 0 );
+    testCubeBody.position.set( -3, 1, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -226,7 +226,7 @@ function load_ghost()
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 55, 3, 0 );
+                testCubeBody.position.set( 63, 5, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
                     /*turtle.mesh.geometry.boundingBox.max.x *= 50;
@@ -298,7 +298,7 @@ function load_ghost()
         }
 
         //If the player touches an enemy or a lava drop, they die
-        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
+        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904) || e.body.tag==600) { // Arriba Use body.Tag instead of id
             window.cancelAnimationFrame(request);
             death(); 
         }

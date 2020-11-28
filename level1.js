@@ -4,14 +4,14 @@ function load_map(){ //Load level plane grounds (boxes)
     lava_counter=0;
 
     //Create planes for the floor 1st Level
-
+    //First Part First Level
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.blue);
     create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water,"water"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.blue);
-    //create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
-    //create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
-    //create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
+    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
+    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
+    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
     create_ground({x: 4, y: 2, z: 5}, {x: 85, y: -2, z: 0}, materials.blue);
@@ -20,17 +20,21 @@ function load_map(){ //Load level plane grounds (boxes)
     create_trap({x: 68.7, y: -3, z: 0}); //Create peaks that kill the user
     create_trap({x: 87.7, y: -3, z: 0}); //Create peaks that kill the user
 
+    //Second Part First Level
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -204, y: -2, z: 0}, materials.level1);
     create_ground({x: 12, y: 2, z: 5}, {x: 206, y: -2, z: 0}, materials.water, "ground"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 215, y: -2, z: 0}, materials.level1);
     create_ground({x: 2, y: 1, z: 5}, {x: 226, y: 3, z: 0}, materials.level1);
+    //Position
+    create_trap({x: 269, y: -3, z: 0}); //Create peaks that kill the user
+    create_trap({x: 288, y: -3, z: 0}); //Create peaks that kill the user
 
     create_ground({x: 2, y: 1, z: 5}, {x: 237, y: 3, z: 0}, materials.level1);
     create_ground({x: 10, y: 2, z: 5}, {x: 255, y: -2, z: 0}, materials.level1);
     create_ground({x: 8, y: 2, z: 5}, {x: 264, y: -2, z: 0}, materials.orange);
-    //create_ground({x: 4, y: 2, z: 5}, {x: 281, y: -2, z: 0}, materials.orange);
-    //create_ground({x: 4, y: 2, z: 5}, {x: 293, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 285, y: -2, z: 0}, materials.orange);
+    create_ground({x: 4, y: 2, z: 5}, {x: 304, y: -2, z: 0}, materials.orange);
     
     // Create 2nd Level 
     create_ground({x: 22, y: 2, z: 5}, {x: 400, y: -2, z: 0}, materials.purple);

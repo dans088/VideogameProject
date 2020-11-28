@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 400, 30, 0 );
-    testCubeBody.position.set( 400, 30, 0 );
+    ghostMesh.position.set( 596, 31.3, 0 );
+    testCubeBody.position.set( 596, 31.3, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -261,13 +261,46 @@ function load_ghost()
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
-        } else if(e.body.tag == levelGroundTag){
+        } 
+        else if(e.body.tag == (portalTag+4)){ // Arriba
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 593, 31.3, 0 );
+               
+            }
+        }
+        else if(e.body.tag == (portalTag+5)){ // Arriba
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 255, 3, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+6)){ // Arriba
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 255, 3, 0 );
+    
+            }
+        }
+        else if(e.body.tag == levelGroundTag){
             testCube.canJump = true;
             transporthandler = true;
         }
+
         //If the player touches an enemy or a lava drop, they die
         else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
-            console.log("lava");
             window.cancelAnimationFrame(request);
             clearInterval(lava_interval);
             clearInterval(portal_interval);

@@ -106,11 +106,14 @@ function create_portals(){ //Create many portals
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
     let NOISEMAP = new THREE.TextureLoader().load("images/color_clouds.jpg");
 
+    //Level 1
     create_portal(0, NOISEMAP, COLORMAP, {x: 6, y: 3, z: 0})
     create_portal(1, COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
     create_portal(2, COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
     create_portal(3, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
-    create_portal(4, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0})
+    
+    //Level 2
+    create_portal(4, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0}) //First portal
     create_portal(5, NOISEMAP,COLORMAP, {x: 425, y: 27, z: 0}, true, 1) //Portal with movement
     create_portal(6, NOISEMAP, COLORMAP, {x: 593, y: 31.3, z: 0})
     // create_portal(NOISEMAP, COLORMAP, {x: 431, y: 18.5, z: 0})

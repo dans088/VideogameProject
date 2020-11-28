@@ -51,7 +51,7 @@ addPhysicalBody = function (tag, mesh, bodyOptions, collision) {
         body.collisionFilterMask = 200; // It can only collide with group 200 (Player)
     } else if (tag == 0){ // Player tag
         body.collisionFilterGroup = 200; //Assign to group 200
-    } else if (tag >20 && tag < 40 || tag == 100){ // Portals and Ground tag
+    } else if (tag>20 && tag < 40|| tag==903 || tag==904 || tag == 100){ // Portals and Ground tag
         body.collisionFilterMask = 200; // It can only collide with group 200 (Player)
     }
 

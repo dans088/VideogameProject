@@ -286,9 +286,6 @@ function death(){
     canvas.width = 900; 
     canvas.height = 600;
 
-    //color2 = new THREE.Color( 0x000000 );
-    scene.background = null;
-    scene.visibe = false;
     console.log(scene);
 
     //All elements from the scene are deleted

@@ -14,8 +14,11 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 85, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 104, y: -2, z: 0}, materials.blue);
+    //Position
+    create_trap({x: 68.7, y: -3, z: 0}); //Create peaks that kill the user
+    create_trap({x: 87.7, y: -3, z: 0}); //Create peaks that kill the user
 
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -204, y: -2, z: 0}, materials.level1);
@@ -104,6 +107,18 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     
 }
 
+function create_trap(position){
+    let finalPoistion = (0.4 * 2 * 17) + position.x;
+    for(let i = position.x; i< finalPoistion; i += 0.8){
+        const geometry = new THREE.ConeGeometry( 0.4, 3, 10 );
+        const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+        const cone = new THREE.Mesh( geometry, material );
+        cone.position.set(i, position.y, position.z)
+        addPhysicalBody(600, cone, {mass: 0}, true);
+        scene.add( cone );
+    }
+}
+
 function create_portals(){ //Create many portals
 
     let COLORMAP = new THREE.TextureLoader().load("images/whirlpool.jpg");
@@ -114,7 +129,7 @@ function create_portals(){ //Create many portals
     create_portal(1, COLORMAP, NOISEMAP, {x: 206, y: 3, z: 0})
     create_portal(2, COLORMAP, NOISEMAP, {x: 255, y: 3, z: 0})
     create_portal(3, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0})
-    create_portal(4, NOISEMAP, COLORMAP, {x: 55, y: 3, z: 0}) // Go to Second Level
+    create_portal(4, NOISEMAP, COLORMAP, {x: 110, y: 3, z: 0}) // Go to Second Level
     
     //Level 2
     create_portal(5, NOISEMAP, COLORMAP, {x: 393, y: 31.3, z: 0}) //First portal First Part-> 6

@@ -234,17 +234,19 @@ function run() {
         }
 
         // Move enemy ghosts left or right and attach mesh to body
-        console.log(enemies.length);
-        if(enemies.length > 0){
+        if(enemies.length > 0){ //If there are enemies
+            // If the right most enemy is to the left of the player or if the enemies collide with wall
             if(enemies[0].body.position.x < 598 || 
                 (enemies[enemies.length -1].body.position.x + 5 < player.playerObject.position.x && enemiesMoveLeft == true)
                 ){
                 enemiesMoveLeft = false;
+            // If the left most enemy is to the right of the player or if the enemies collide with wall
             } else if (enemies[enemies.length -1].body.position.x > 668 ||
                         (enemies[0].body.position.x - 5 > player.playerObject.position.x && enemiesMoveLeft == false)
                         ){
                 enemiesMoveLeft = true;
             }
+            //Move left or right
             enemies.forEach(enemy => {
                 if(enemiesMoveLeft){
                     enemy.body.position.x -= 0.04;
@@ -382,9 +384,6 @@ async function scene_setup(canvas)
 
     //turtle animation time in seconds
     duration = 10;
-
-    //console.log("Turtle:", group);
-
     
     //Create planes for the floor 1st Level
     const groundGeometry1 = new THREE.BoxGeometry(10, 2, 5 );

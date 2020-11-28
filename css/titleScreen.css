@@ -17,6 +17,13 @@
 	letter-spacing: 6px;
 }
 
+#winScreen{
+	color:white;
+	background-color: black;
+	font-family: PlayMeGames;
+	letter-spacing: 6px;
+}
+
 #title {
 	position:absolute;
 	left:185px;

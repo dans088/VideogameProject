@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 60, 0, 0 );
-    testCubeBody.position.set( 60, 0, 0 );
+    ghostMesh.position.set( 465, 3, 0 );
+    testCubeBody.position.set( 465, 3, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -283,8 +283,11 @@ function load_ghost()
         else if(e.body.tag == (portalTag+10)){ // Second Portal Second part
             teleport({x: 655, y: 12.8, z: 0});
         }
-        else if(e.body.tag == (portalTag+11)){ //WIN
+        else if(e.body.tag == (portalTag+11)){ 
             teleport({x: 465, y: 2.5, z: 0});
+        }
+        else if(e.body.tag == (portalTag+12)){ //WIN
+            win();
         }
         else if(e.body.tag == levelGroundTag){
             testCube.canJump = true;
@@ -342,8 +345,6 @@ function death(){
     canvas.width = 900; 
     canvas.height = 600;
 
-    console.log(scene);
-
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 
         scene.remove(scene.children[0]); 
@@ -358,4 +359,27 @@ function death(){
 
     //Toggle the game over screen
     toggleGameOver();
+}
+
+//Function to use when the player wins
+function win(){
+
+    let canvas = document.getElementById("webglcanvas");
+    canvas.width = 900; 
+    canvas.height = 600;
+
+    //All elements from the scene are deleted
+    while(scene.children.length > 0){ 
+        scene.remove(scene.children[0]); 
+    }
+    scene = null;
+
+    //All elements from the world are deleted
+    while(world.bodies.length > 0){ 
+        world.remove(world.bodies[0]); 
+    }
+    world=null;
+
+    //Toggle the game over screen
+    toggleWin();
 }

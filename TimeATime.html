@@ -121,13 +121,23 @@
 		}
 	}
 
-	//Function that displays or removes the instructions menu
+	//Function that displays or removes the game over screen
 	function toggleGameOver() {
 		var gameOverScreen = document.getElementById("gameOverScreen");
 		if (gameOverScreen.style.display === "none") {
 			gameOverScreen.style.display = "block";
 		} else {
 			gameOverScreen.style.display = "none";
+		}
+	}
+
+	//Function that displays or removes the win screen
+	function toggleWin() {
+		var winScreen = document.getElementById("winScreen");
+		if (winScreen.style.display === "none") {
+			winScreen.style.display = "block";
+		} else {
+			winScreen.style.display = "none";
 		}
 	}
 
@@ -159,7 +169,7 @@
 			<p id="instructionsText">Move: Left and right arrow</p>
 			<p id="instructionsText2">Jump: Spacebar</p>
 			<p id="instructionsText3">Grab: G</p>
-			<p id="instructionsText4">You are stuck in limbo. Reach the end of the levels using the portals to try and find the exit</p>
+			<p id="instructionsText4">Reach the end of the levels using the portals to travel through time</p>
 			<button id="goBackButton" onclick="toggleInstructions(),toggleMenu()">Go Back</button>
 		</div>
 		
@@ -168,6 +178,12 @@
 			<h1 id="titleGameOver">Game over</h1>
 			<button id="tryAgainButton" onclick="toggleGameOver(),startGame()">Try again</button>
 			<button id="startGameButton" onclick="toggleGameOver(),toggleMenu()">Main menu</button>
+		</div>
+
+		<!--Win screen-->
+		<div id="winScreen" style="display: none;">
+			<h1 id="titleGameOver">You Won</h1>
+			<button id="startGameButton" onclick="toggleWin(),toggleMenu()">Main menu</button>
 		</div>
 
 		<canvas id="webglcanvas" width="900" height="600" style = "background-color: black;"></canvas>

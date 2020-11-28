@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 460, 2.5, 0 );
-    testCubeBody.position.set( 460, 2.5, 0 );
+    ghostMesh.position.set( 60, 0, 0 );
+    testCubeBody.position.set( 60, 0, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -263,74 +263,28 @@ function load_ghost()
             }
         } 
         else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 593, 31.3, 0 );
-            }
+            teleport({x: 393, y: 2.5, z: 0});
         }
-        else if(e.body.tag == (portalTag+5)){ //Portal with movement -> Third Portal First Part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 457, 2.5, 0 );
-            }
+        else if(e.body.tag == (portalTag+5)){ //Level 2 First portal
+            teleport({x: 593, y: 31.3, z: 0});
         }
-        else if(e.body.tag == (portalTag+6)){ // First Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 395, 32, 0 );
-            }
+        else if(e.body.tag == (portalTag+6)){ //Portal with movement -> Third Portal First Part
+            teleport({x: 457, y: 2.5, z: 0});
         }
-        else if(e.body.tag == (portalTag+7)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 431, 20, 0 );
-            }
+        else if(e.body.tag == (portalTag+7)){ // First Portal Second part
+            teleport({x: 395, y: 32, z: 0});
         }
         else if(e.body.tag == (portalTag+8)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 431, 20, 0 );
-            }
+            teleport({x: 431, y: 20, z: 0});
         }
         else if(e.body.tag == (portalTag+9)){ // Second Portal Second part
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 655, 12.8, 0 );
-            }
+            teleport({x: 431, y: 20, z: 0});
         }
-        else if(e.body.tag == (portalTag+10)){ //WIN
-            //If key handler is true
-            if(transporthandler){
-                //Set it to false
-                transporthandler = false;
-                toggleSceneHandler();
-                change_scene(scene);
-                testCubeBody.position.set( 465, 2.5, 0 );
-            }
+        else if(e.body.tag == (portalTag+10)){ // Second Portal Second part
+            teleport({x: 655, y: 12.8, z: 0});
+        }
+        else if(e.body.tag == (portalTag+11)){ //WIN
+            teleport({x: 465, y: 2.5, z: 0});
         }
         else if(e.body.tag == levelGroundTag){
             testCube.canJump = true;
@@ -348,6 +302,37 @@ function load_ghost()
 
     scene.add(testCube.mesh);
 
+}
+
+function teleport(position){ // Teleport player to new position
+    //If key handler is true
+    if(transporthandler){
+        //Set it to false
+        transporthandler = false;
+        toggleSceneHandler();
+        change_scene(scene);
+        testCubeBody.position.set(position.x, position.y, position.z );
+    }
+}
+
+function teleport_with_turtle(position, meshScale, bodyScale){ // Teleport player and scale turtle 
+    //If key handler is true
+    if(transporthandler){
+        //Set it to false
+        transporthandler = false;
+        toggleSceneHandler();
+        change_scene(scene);
+        testCubeBody.position.set( position.x, position.y, position.z );
+        if(turtle.grabbed){
+            //Return to orginal size
+            turtle.mesh.scale.x = meshScale; 
+            turtle.mesh.scale.y = meshScale;
+            turtle.mesh.scale.z = meshScale;
+            turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+            turtleBody.position.copy(testCubeBody.position);
+            turtle.turtleObject.scale.set(bodyScale, bodyScale, bodyScale);
+        }
+    }
 }
 
 //Function to use when the player dies

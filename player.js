@@ -136,12 +136,12 @@ function keyEvents(){
     }); 
 
     document.addEventListener("keypress", event=>{
-
+        
         if(event.code == "KeyG"){
 
             //If key handler is true
             if(keyhandler){
-
+                
                 //Set it to false
                 keyhandler = false;
                 
@@ -266,6 +266,10 @@ function load_ghost()
             }
         } 
         else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
+            
+            if(enemies.length == 0){
+                create_enemies();
+            }
             teleport({x: 393, y: 2.5, z: 0});
         }
         else if(e.body.tag == (portalTag+5)){ //Level 2 First portal
@@ -361,6 +365,8 @@ function death(){
     }
     world=null;
 
+    sceneHandler = false;
+
     enemies = []
 
     //Toggle the game over screen
@@ -389,6 +395,8 @@ function win(){
         world.remove(world.bodies[0]); 
     }
     world=null;
+
+    sceneHandler = false;
 
     enemies = []
 

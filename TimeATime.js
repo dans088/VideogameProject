@@ -266,10 +266,15 @@ function run() {
         if(!turtle.grabAnimations){
             KF.update();
         }
+        /*
+        console.log("Grab", turtle.grabbed);
+        console.log("Body", turtleBody.position.x);
+        console.log("cubeBody", testCubeBody.position.x);
+        console.log("Distance", distance);
+        */
 
         if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
             turtle.grabAnimations=true;
-
             //If the player is in the past
             if(sceneHandler){
                 turtleBody.position.x = testCubeBody.position.x + 1.5;
@@ -286,7 +291,6 @@ function run() {
 
         } else if (turtle.grabbed && turtleBody.position.x < testCubeBody.position.x && distance < 3){
             turtle. grabAnimations=true;
-
             //If the player is in the past
             if(sceneHandler){
                 turtleBody.position.x = testCubeBody.position.x - 1.5;
@@ -425,7 +429,7 @@ async function scene_setup(canvas)
     portal_interval = setInterval(create_portal_movement, 3000)
         
     create_portals();
-    create_enemies();
+    
 }
 
 

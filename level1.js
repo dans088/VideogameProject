@@ -193,7 +193,7 @@ function create_portal(portalCounter, texture1, texture2, portalPosition, move_p
 
 function create_enemies(){
 
-    let positions_x = [664, 666, 668]
+    let positions_x = [664, 666, 668];
     let counter = 900;
     
     positions_x.forEach(position_x => {

@@ -270,16 +270,35 @@ function run() {
         if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
             turtle.grabAnimations=true;
 
-            turtleBody.position.x = testCubeBody.position.x + 1.5;
-            turtleBody.position.y = testCubeBody.position.y;
-            turtleBody.position.z = testCubeBody.position.z;
+            //If the player is in the past
+            if(sceneHandler){
+                turtleBody.position.x = testCubeBody.position.x + 1.5;
+                turtleBody.position.y = testCubeBody.position.y;
+                turtleBody.position.z = testCubeBody.position.z;
+            }
+            //If the player is in the future
+            if(!sceneHandler){
+                turtleBody.position.x = testCubeBody.position.x + 1;
+                turtleBody.position.y = testCubeBody.position.y - 3;
+                turtleBody.position.z = testCubeBody.position.z;
+            }
+            
 
         } else if (turtle.grabbed && turtleBody.position.x < testCubeBody.position.x && distance < 3){
             turtle. grabAnimations=true;
 
-            turtleBody.position.x = testCubeBody.position.x - 1.5;
-            turtleBody.position.y = testCubeBody.position.y;
-            turtleBody.position.z = testCubeBody.position.z;
+            //If the player is in the past
+            if(sceneHandler){
+                turtleBody.position.x = testCubeBody.position.x - 1.5;
+                turtleBody.position.y = testCubeBody.position.y;
+                turtleBody.position.z = testCubeBody.position.z;
+            }
+            //If the player is in the future
+            if(!sceneHandler){
+                turtleBody.position.x = testCubeBody.position.x + 1;
+                turtleBody.position.y = testCubeBody.position.y - 3;
+                turtleBody.position.z = testCubeBody.position.z;
+            }
 
             
         }

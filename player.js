@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 85, 1, 0 );
-    testCubeBody.position.set( 85, 1, 0 );
+    ghostMesh.position.set( 1, 1, 0 );
+    testCubeBody.position.set(1, 1, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -198,9 +198,6 @@ function load_ghost()
                 testCubeBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
-                    turtle.mesh.scale.x = 1; 
-                    turtle.mesh.scale.y = 1;
-                    turtle.mesh.scale.z = 1;
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
@@ -216,11 +213,8 @@ function load_ghost()
                 change_scene(scene);
                 testCubeBody.position.set( 6, 3, 0 );
                 if(turtle.grabbed){
-                    // Increase turtle size
-                    turtle.mesh.scale.x = 5;
-                    turtle.mesh.scale.y = 5;
-                    turtle.mesh.scale.z = 5;
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
@@ -235,10 +229,19 @@ function load_ghost()
                 testCubeBody.position.set( 55, 3, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
-                    turtle.mesh.scale.x = 5;
-                    turtle.mesh.scale.y = 5;
-                    turtle.mesh.scale.z = 5; 
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    /*turtle.mesh.geometry.boundingBox.max.x *= 50;
+                    turtle.mesh.geometry.boundingBox.max.y *= 50;
+                    turtle.mesh.geometry.boundingBox.max.z *= 50;
+
+                    turtle.mesh.geometry.boundingBox.min.x *= 50;
+                    turtle.mesh.geometry.boundingBox.min.y *= 50;
+                    turtle.mesh.geometry.boundingBox.min.z *= 50;*/
+
+                    //turtle.mesh.scale.y = 5;
+                    //turtle.mesh.scale.z = 5; 
+
+                    
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
@@ -256,7 +259,7 @@ function load_ghost()
                     turtle.mesh.scale.x = 1; 
                     turtle.mesh.scale.y = 1;
                     turtle.mesh.scale.z = 1;
-                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
+                    turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(testCubeBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
@@ -289,7 +292,7 @@ function load_ghost()
         else if(e.body.tag == (portalTag+12)){ //WIN
             win();
         }
-        else if(e.body.tag == levelGroundTag){
+        else if(e.body.tag == levelGroundTag || e.body.tag == turtleTag){
             testCube.canJump = true;
             transporthandler = true;
         }

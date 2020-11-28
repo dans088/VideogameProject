@@ -14,11 +14,11 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 85, y: -2, z: 0}, materials.blue);
-    create_ground({x: 4, y: 2, z: 5}, {x: 104, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 83.5, y: -2, z: 0}, materials.blue);
+    create_ground({x: 4, y: 2, z: 5}, {x: 100, y: -2, z: 0}, materials.blue);
     //Position
     create_trap({x: 68.7, y: -3, z: 0}); //Create peaks that kill the user
-    create_trap({x: 87.7, y: -3, z: 0}); //Create peaks that kill the user
+    create_trap({x: 85.7, y: -3, z: 0}); //Create peaks that kill the user
 
     //Second Part First Level
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
@@ -104,7 +104,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
         lava_counter+=1;
     }
     else if(type=="water"){
-        lavabody = addPhysicalBody(100, ground, {mass: 0}, false);
+        lavabody = addPhysicalBody(levelGroundTag, ground, {mass: 0}, false);
         //body2mesh(lavabody,true);
         scene.add(ground);
     }
@@ -112,7 +112,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
 }
 
 function create_trap(position){
-    let finalPoistion = (0.4 * 2 * 17) + position.x;
+    let finalPoistion = (0.4 * 2 * 15) + position.x;
     for(let i = position.x; i< finalPoistion; i += 0.8){
         const geometry = new THREE.ConeGeometry( 0.4, 3, 10 );
         const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
@@ -230,7 +230,7 @@ function create_lava(){
         
         if(ellipse_mesh != null){
             ellipse_mesh.position.set(x, 40, 0 );
-            let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true, 200);
+            let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true);
             ellipse = {mesh: ellipse_mesh , body: ellipse_body}
             lava_ellipses.push(ellipse);
             scene.add(ellipse_mesh);

@@ -175,7 +175,7 @@ function load_turtle()
     let objModelUrl = {obj:'Models/Turtle2.obj'};
 
     //Create turtle object
-    turtleBody = addPhysicalBody(turtleTag,turtleMesh, {mass: 1}, true)
+    turtleBody = addPhysicalBody(turtleTag, turtleMesh, {mass: 1}, true)
     turtle = new Turtle(turtleMesh, turtleBody, 0.1);
 
     turtle.loadObj(objModelUrl, group);

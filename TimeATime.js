@@ -7,6 +7,7 @@ let renderer = null,    // Object in charge of drawing a scene
 scene = null,           
 camera = null,
 uniforms = null,
+uniformsArray = [],
 mtlLoader = null,
 objLoader = null,
 canvas = null;
@@ -70,7 +71,7 @@ materials = {
     }),
 };
 
-let duration = 5000; // ms
+let duration2 = 5000; // ms
 let currentTime = Date.now();
 
 let TurtleAnimator = null;
@@ -154,9 +155,12 @@ function animate()
     let now = Date.now();
     let deltat = now - currentTime;
     currentTime = now;
-    let fract = deltat / duration;
-   
-    //uniforms.time.value += fract;
+    let fract = deltat / duration2;
+    uniformsArray.forEach(uniforms => {
+        uniforms.time.value += fract;
+    });
+
+    
 
     world.step(1/60);
 
@@ -385,5 +389,9 @@ async function scene_setup(canvas)
 
     load_map();
     create_portals();
+<<<<<<< Updated upstream
     create_enemies();
+=======
+    
+>>>>>>> Stashed changes
 }

@@ -184,7 +184,10 @@ function load_ghost()
     testCubeBody.position.set( 400, 30, 0 );
 
     testCube.body.addEventListener("collide",function(e){
-        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
+
+        console.log(e.body.tag);
+
+        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){
@@ -262,6 +265,14 @@ function load_ghost()
             testCube.canJump = true;
             transporthandler = true;
         }
+        //If the player touches an enemy or a lava drop, they die
+        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
+            console.log("lava");
+            window.cancelAnimationFrame(request);
+            clearInterval(lava_interval);
+            clearInterval(portal_interval);
+            death(); 
+        }
     });
 
     scene.add(testCube.mesh);
@@ -279,9 +290,6 @@ function death(){
     scene.background = null;
     scene.visibe = false;
     console.log(scene);
-
-    //The renderer is cleared
-    renderer.clear();
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 

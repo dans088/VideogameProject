@@ -180,8 +180,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 465, 3, 0 );
-    testCubeBody.position.set( 465, 3, 0 );
+    ghostMesh.position.set( 593, 33, 0 );
+    testCubeBody.position.set( 593, 33, 0 );
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -358,6 +358,8 @@ function death(){
     }
     world=null;
 
+    enemies = []
+
     //Toggle the game over screen
     toggleGameOver();
 }
@@ -384,6 +386,8 @@ function win(){
         world.remove(world.bodies[0]); 
     }
     world=null;
+
+    enemies = []
 
     //Toggle the game over screen
     toggleWin();

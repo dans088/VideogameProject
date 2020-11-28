@@ -234,7 +234,7 @@ function run() {
         }
 
         // Move enemy ghosts left or right and attach mesh to body
-        console.log(enemiesMoveLeft);
+        console.log(enemies.length);
         if(enemies.length > 0){
             if(enemies[0].body.position.x < 598 || 
                 (enemies[enemies.length -1].body.position.x + 5 < player.playerObject.position.x && enemiesMoveLeft == true)

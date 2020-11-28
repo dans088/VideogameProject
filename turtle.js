@@ -180,7 +180,7 @@ function load_turtle()
 
     turtle.loadObj(objModelUrl, group);
 
-    turtleMesh.position.set( 206, 0, 0 );
-    turtleBody.position.set( 206, 0, 0 );
+    turtleMesh.position.set( 206, 2, 0 );
+    turtleBody.position.set( 206, 2, 0 );
     scene.add(turtle.mesh);
 }

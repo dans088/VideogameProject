@@ -7,23 +7,22 @@ function load_map(){ //Load level plane grounds (boxes)
 
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.blue);
+    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water,"water"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.blue);
     create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
+    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
     create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
     create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.blue);
     create_ground({x: 4, y: 2, z: 5}, {x: 93, y: -2, z: 0}, materials.blue);
-    
-    create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water,"water"); //Water
-    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
-    create_ground({x: 12, y: 2, z: 5}, {x: 206, y: -2, z: 0}, materials.water, "water"); //Water
-    create_ground({x: 32, y: 2, z: 5}, {x: 234, y: -2, z: 0}, materials.water, "water"); //Water
 
     //Call function with parameters (Geometry, Position, Material) to Create Meshes
     create_ground({x: 8, y: 2, z: 5}, {x: -204, y: -2, z: 0}, materials.level1);
+    create_ground({x: 12, y: 2, z: 5}, {x: 206, y: -2, z: 0}, materials.water, "ground"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 215, y: -2, z: 0}, materials.level1);
     create_ground({x: 2, y: 1, z: 5}, {x: 226, y: 3, z: 0}, materials.level1);
+
     create_ground({x: 2, y: 1, z: 5}, {x: 237, y: 3, z: 0}, materials.level1);
     create_ground({x: 10, y: 2, z: 5}, {x: 255, y: -2, z: 0}, materials.level1);
     create_ground({x: 8, y: 2, z: 5}, {x: 264, y: -2, z: 0}, materials.orange);
@@ -75,8 +74,6 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 18, y: 13, z: 5}, {x: 661, y: 3.7, z: 0}, materials.light_blue);
     create_ground({x: 18, y: 8, z: 5}, {x: 661, y: 24.75, z: 0}, materials.light_blue);
     create_ground({x: 80, y: 1, z: 5}, {x: 630, y: 34, z: 0}, materials.light_blue);
-
-
     
 }
 
@@ -94,6 +91,12 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     }
     else if(type=="lava"){
         lavabody = addPhysicalBody(903+lava_counter, ground, {mass: 0}, true);
+        //body2mesh(lavabody,true);
+        scene.add(ground);
+        lava_counter+=1;
+    }
+    else if(type=="water"){
+        lavabody = addPhysicalBody(100, ground, {mass: 0}, false);
         //body2mesh(lavabody,true);
         scene.add(ground);
         lava_counter+=1;

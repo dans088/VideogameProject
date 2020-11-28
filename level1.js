@@ -97,6 +97,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
         scene.add(ground);
     }
     else if(type=="lava"){
+        console.log(903+lava_counter);
         lavabody = addPhysicalBody(903+lava_counter, ground, {mass: 0}, true);
         //body2mesh(lavabody,true);
         scene.add(ground);
@@ -106,7 +107,6 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
         lavabody = addPhysicalBody(100, ground, {mass: 0}, false);
         //body2mesh(lavabody,true);
         scene.add(ground);
-        lava_counter+=1;
     }
     
 }

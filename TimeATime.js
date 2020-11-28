@@ -305,8 +305,18 @@ function run() {
 
         //The position of the player character needs to be the same as the position of their cannon body
         group.position.copy(turtleBody.position);
-        group.position.x -=1;
-        group.position.y +=0.8;
+
+        //If the player is in the past
+        if(sceneHandler){
+            group.position.x -=1;
+            group.position.y +=0.8;
+        }
+        //If the player is in the future
+        if(!sceneHandler){
+            group.position.x -=1;
+            group.position.y -=1;
+        }
+        
         //The position of the player character needs to be the same as the position of their cannon body
         turtle.mesh.position.copy(turtleBody.position);
         

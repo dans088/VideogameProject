@@ -91,7 +91,7 @@ function createBoxShape (mesh, ifTurtle=false){
         console.log("TURTLE")
         shape = new CANNON.Box(new CANNON.Vec3(
             ((box.max.x - box.min.x) / 2)*7,
-            ((box.max.y - box.min.y) / 2)*7,
+            ((box.max.y - box.min.y) / 2)*10,
             ((box.max.z - box.min.z) / 2)*7
         ));
     }

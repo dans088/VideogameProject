@@ -297,8 +297,6 @@ function load_ghost()
         //If the player touches an enemy or a lava drop, they die
         else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
             window.cancelAnimationFrame(request);
-            clearInterval(lava_interval);
-            clearInterval(portal_interval);
             death(); 
         }
     });
@@ -345,6 +343,9 @@ function death(){
     canvas.width = 900; 
     canvas.height = 600;
 
+    clearInterval(lava_interval);
+    clearInterval(portal_interval);
+
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 
         scene.remove(scene.children[0]); 
@@ -367,6 +368,10 @@ function win(){
     let canvas = document.getElementById("webglcanvas");
     canvas.width = 900; 
     canvas.height = 600;
+
+    window.cancelAnimationFrame(request);
+    clearInterval(lava_interval);
+    clearInterval(portal_interval);
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 

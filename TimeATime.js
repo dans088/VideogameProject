@@ -25,6 +25,10 @@ group = null; //Object for the turtle
 turtleBody = null;
 transporthandler = true;
 sceneHandler = false; //boolean to change scene background
+request=null;
+
+let lava_interval = null; //Variable for the interval that makes lava appear randomly
+let portal_interval = null; //Variable for the interval that makes the portal move
 
 //Level 1 Ground 1
 level1Grounds = [];
@@ -193,7 +197,7 @@ function animate()
 //Run function
 function run() {
 
-    let request = requestAnimationFrame(function() { run(); });
+    request = requestAnimationFrame(function() { run(); });
     
     if(camera != null){
         // Render the scene
@@ -375,7 +379,7 @@ async function scene_setup(canvas)
     //Create turtle character
     await load_turtle();
 
-    //animation time in seconds
+    //turtle animation time in seconds
     duration = 10;
 
     //console.log("Turtle:", group);
@@ -388,6 +392,13 @@ async function scene_setup(canvas)
     testGround.position.set(0,-2,0);
 
     load_map();
+
+    lava_interval = setInterval(create_lava, 5000)
+		
+    portal_interval = setInterval(create_portal_movement, 3000)
+        
     create_portals();
     create_enemies();
 }
+
+

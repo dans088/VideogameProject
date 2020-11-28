@@ -180,11 +180,14 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( 400, 30, 0 );
-    testCubeBody.position.set( 400, 30, 0 );
+    ghostMesh.position.set( 460, 2.5, 0 );
+    testCubeBody.position.set( 460, 2.5, 0 );
 
     testCube.body.addEventListener("collide",function(e){
-        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
+
+        console.log(e.body.tag);
+
+        console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){
@@ -258,9 +261,88 @@ function load_ghost()
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
-        } else if(e.body.tag == levelGroundTag){
+        } 
+        else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 593, 31.3, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+5)){ //Portal with movement -> Third Portal First Part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 457, 2.5, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+6)){ // First Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 395, 32, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+7)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 431, 20, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+8)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 431, 20, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+9)){ // Second Portal Second part
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 655, 12.8, 0 );
+            }
+        }
+        else if(e.body.tag == (portalTag+10)){ //WIN
+            //If key handler is true
+            if(transporthandler){
+                //Set it to false
+                transporthandler = false;
+                toggleSceneHandler();
+                change_scene(scene);
+                testCubeBody.position.set( 465, 2.5, 0 );
+            }
+        }
+        else if(e.body.tag == levelGroundTag){
             testCube.canJump = true;
             transporthandler = true;
+        }
+
+        //If the player touches an enemy or a lava drop, they die
+        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904)) { // Arriba Use body.Tag instead of id
+            window.cancelAnimationFrame(request);
+            clearInterval(lava_interval);
+            clearInterval(portal_interval);
+            death(); 
         }
     });
 
@@ -275,13 +357,7 @@ function death(){
     canvas.width = 900; 
     canvas.height = 600;
 
-    //color2 = new THREE.Color( 0x000000 );
-    scene.background = null;
-    scene.visibe = false;
     console.log(scene);
-
-    //The renderer is cleared
-    //renderer.clear();
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 

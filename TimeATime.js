@@ -164,8 +164,6 @@ function animate()
         uniforms.time.value += fract;
     });
 
-    
-
     world.step(1/60);
 
     // console.log(world.contacts);

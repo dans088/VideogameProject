@@ -9,9 +9,9 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 8, y: 2, z: 5}, {x: -4, y: -2, z: 0}, materials.blue);
     create_ground({x: 12, y: 2, z: 5}, {x: 6, y: -2, z: 0}, materials.water,"water"); //Water
     create_ground({x: 6, y: 2, z: 5}, {x: 15, y: -2, z: 0}, materials.blue);
-    create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
-    create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
-    create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
+    //create_ground({x: 2, y: 1, z: 5}, {x: 26, y: 3, z: 0}, materials.blue);
+    //create_ground({x: 32, y: 2, z: 5}, {x: 34, y: -2, z: 0}, materials.water, "water"); //Water
+    //create_ground({x: 2, y: 1, z: 5}, {x: 37, y: 3, z: 0}, materials.blue);
     create_ground({x: 10, y: 2, z: 5}, {x: 55, y: -2, z: 0}, materials.blue);
     create_ground({x: 8, y: 2, z: 5}, {x: 64, y: -2, z: 0}, materials.blue);
     create_ground({x: 4, y: 2, z: 5}, {x: 81, y: -2, z: 0}, materials.blue);
@@ -26,8 +26,8 @@ function load_map(){ //Load level plane grounds (boxes)
     create_ground({x: 2, y: 1, z: 5}, {x: 237, y: 3, z: 0}, materials.level1);
     create_ground({x: 10, y: 2, z: 5}, {x: 255, y: -2, z: 0}, materials.level1);
     create_ground({x: 8, y: 2, z: 5}, {x: 264, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 281, y: -2, z: 0}, materials.orange);
-    create_ground({x: 4, y: 2, z: 5}, {x: 293, y: -2, z: 0}, materials.orange);
+    //create_ground({x: 4, y: 2, z: 5}, {x: 281, y: -2, z: 0}, materials.orange);
+    //create_ground({x: 4, y: 2, z: 5}, {x: 293, y: -2, z: 0}, materials.orange);
     
     // Create 2nd Level 
     create_ground({x: 22, y: 2, z: 5}, {x: 400, y: -2, z: 0}, materials.purple);

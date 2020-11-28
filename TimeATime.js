@@ -389,9 +389,6 @@ async function scene_setup(canvas)
 
     load_map();
     create_portals();
-<<<<<<< Updated upstream
+
     create_enemies();
-=======
-    
->>>>>>> Stashed changes
-}
+

@@ -29,6 +29,12 @@ class Player
             objLoader.setMaterials(materials);
 
             objLoader.load(objModelUrl, object=>{
+                object.traverse( function ( child ) {
+                    if ( child.isMesh ) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                } );
                 object.position.y = 0.5;
                 //object.rotation.y = Math.PI/2;
                 object.scale.set(0.5, 0.5, 0.5);

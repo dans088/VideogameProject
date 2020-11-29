@@ -22,6 +22,8 @@ class Enemy
             object.traverse( function ( child ) {
                 if ( child.isMesh ) {
                     child.material = materials;
+                    child.castShadow = true;
+                    child.receiveShadow = true;
                 }
             } );
 
@@ -249,6 +251,8 @@ function create_portal(portalCounter, texture1, texture2, portalPosition, move_p
     //Create Portal mesh
     let geometry = new THREE.SphereGeometry(radius, 36, 36);
     let portal = new THREE.Mesh(geometry, material);
+
+    portal.castShadow = true;
    
     portal.position.set( portalPosition.x, portalPosition.y, portalPosition.z );
     portal.rotation.x = Math.PI/2;

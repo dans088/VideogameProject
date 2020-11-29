@@ -7,8 +7,6 @@ class Enemy
         this.z = z;
     }
 
-
-    
     async load3dModel(objModelUrl, evil_ghosts)
     {
         const materials = new THREE.MeshPhongMaterial( {color: 0xD63030} );

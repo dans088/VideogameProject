@@ -5,12 +5,12 @@ class Turtle
         this.mesh = mesh;
         this.body = body;
         this.speed = speed;
-        this.grabbed = false;
-        this.animations = false;
-        this.grabAnimations = false;
-        this.turtleObject = null;
+        this.grabbed = false;   //boolean to check if turtle is currently grabbed
+        this.animations = false;  //boolean to start turtle animation once the obj is loaded
+        this.grabAnimations = false;  //boolean to stop animations once turtle is grabbed
+        this.turtleObject = null;  //variable that holds the obj 
     }
-
+    //promise
     promisifyLoader ( loader, onProgress ) 
     {
         function promiseLoader ( url ) {
@@ -44,11 +44,10 @@ class Turtle
             });
 
             object.scale.set(0.007, 0.007, 0.007);
-            object.position.set(1, -1, 0);
+            object.position.set(1, -1, 0);  //set turtle in the past dimension
             object.rotation.y = Math.PI*2;
-            object.name = "Turtle";
             this.turtleObject = object;
-            group.add(object);
+            group.add(object); 
             scene.add(group);
         }
         catch (err) {
@@ -58,25 +57,25 @@ class Turtle
    
 
     grab(){
-        this.body.position.y += 0.1;
-        this.body.mass = 0;
+        this.body.position.y += 0.1; //lift turtle
+        this.body.mass = 0;          //make turtle float
         turtle.grabbed = true;
     }
 
     ungrab(){
-        this.body.position.y -= 0;
-        this.body.mass = 1;
+        this.body.position.y -= 0;  //throw turtle
+        this.body.mass = 1;         //make turtle fall
         turtle.grabbed = false;
     }
 }
-
+//turtle walk
 function playAnimations()
 {
     
     TurtleAnimator = new KF.KeyFrameAnimator;
     TurtleAnimator.init({ 
         interps:
-            [
+            [       //walk on a straight line
                 { 
                     keys:[.7, .14, .28, .35, .42, .49, .56, .63, .7, .77, .84, .91, 1], 
                     
@@ -98,7 +97,7 @@ function playAnimations()
                     
                     target:turtleBody.position,
                 },
-                { 
+                {  //turn around
                     keys:[.7, .14, .28, .35, .42, .49, .56, .63, .7, .77, .84, .91, 1],
                     
                     values:[
@@ -119,40 +118,40 @@ function playAnimations()
 
                     target:group.rotation,
                 },
-                { 
+                {   //make turtle wobble
                     keys:[0, .04, .08, .12, .16, .20, .24, .28, .32, .36, .40, .44, .48, .52, .56, .60, .64, .68, .72, .76, .80, .84, .88, .95, 1], 
                     
                     values:[
                             { x: 0 , z : 0},
-                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: Math.PI / 85, z : Math.PI / 32},
                             { x: 0, z : 0},
-                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x: -Math.PI / 85, z : -Math.PI / 32},
                             { x:0, z : 0},
                             { x: 0 , z : 0},
-                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: Math.PI / 85, z : Math.PI / 32},
                             { x: 0, z : 0},
-                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x: -Math.PI / 85, z : -Math.PI / 32},
                             { x:0, z: 0},
                             { x: 0 , z : 0},
-                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: Math.PI / 85, z : Math.PI / 32},
                             { x: 0, z : 0},
-                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x: -Math.PI / 85, z : -Math.PI / 32},
                             { x:0, z : 0},
                             { x: 0 , z : 0},
-                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: Math.PI / 85, z : Math.PI / 32},
                             { x: 0, z : 0},
-                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x: -Math.PI / 85, z : -Math.PI / 32},
                             { x:0, z : 0},
                             { x: 0 , z : 0},
-                            { x: Math.PI / 85, z : Math.PI / 42},
+                            { x: Math.PI / 85, z : Math.PI / 32},
                             { x: 0, z : 0},
-                            { x: -Math.PI / 85, z : -Math.PI / 42},
+                            { x: -Math.PI / 85, z : -Math.PI / 32},
                             { x:0, z : 0},
                             ],
                     target:group.rotation,
                 },
             ],
-
+        //make it walk forever
         loop: true,
         duration:duration * 1000,     
         easing:TWEEN.Easing.Linear.InOut,
@@ -165,6 +164,7 @@ function playAnimations()
 
 function load_turtle()
 {
+    //group that holds the turtle for animation purposes
     group  = new THREE.Object3D;
 
     //Create turtle mesh
@@ -174,13 +174,13 @@ function load_turtle()
 
     let objModelUrl = {obj:'Models/Turtle2.obj'};
 
-    //Create turtle object
+    //Create turtle physical object
     turtleBody = addPhysicalBody(turtleTag, turtleMesh, {mass: 1}, true)
     turtle = new Turtle(turtleMesh, turtleBody, 0.1);
-
+    //load model
     turtle.loadObj(objModelUrl, group);
 
-    turtleMesh.position.set( 206, 10, 0 );
+    turtleMesh.position.set( 206, 10, 0 ); //set turtle in past dimension
     turtleBody.position.set( 206, 10, 0 );
     //scene.add(turtle.mesh);
 }

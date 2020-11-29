@@ -8,19 +8,19 @@ let keysDown = {
     "keyG" : false,
 };
 
-class Player
+class Player // Player class (White Ghost)
 {
-    constructor()
+    constructor() 
     {
         this.speed = 0.1;
-        this.playerObject = null;
+        this.playerObject = null; // WIll contain the model
     }
     
-    load3dModel(objModelUrl, mtlModelUrl)
+    load3dModel(objModelUrl, mtlModelUrl) //Loads the material of the ghost 
     {
         mtlLoader = new THREE.MTLLoader();
 
-        mtlLoader.load(mtlModelUrl, materials =>{
+        mtlLoader.load(mtlModelUrl, materials =>{ 
             
             materials.preload();
 
@@ -28,17 +28,16 @@ class Player
             
             objLoader.setMaterials(materials);
 
-            objLoader.load(objModelUrl, object=>{
+            objLoader.load(objModelUrl, object=>{ // Configure attributes
                 object.traverse( function ( child ) {
                     if ( child.isMesh ) {
                         child.castShadow = true;
                         child.receiveShadow = true;
                     }
                 } );
-                object.position.y = 0.5;
-                //object.rotation.y = Math.PI/2;
-                object.scale.set(0.5, 0.5, 0.5);
-                this.playerObject = object;
+                object.position.y = 0.5; // Move it up so it matches the body
+                object.scale.set(0.5, 0.5, 0.5); //Make it half the size
+                this.playerObject = object; // Save it on the player attribute
                
                 scene.add(object);
             });
@@ -90,9 +89,9 @@ class Cube
 
     //Add velocity in 'y' to the player so they jump
     jump(){
-        if(this.body.velocity.y < 3){
+        if(this.body.velocity.y < 3){ // Make the jump always be greter than 3, 3 is to small
             this.body.velocity.y += 10;
-        } else if (this.body.velocity.y > 3 && this.body.velocity.y < 7) {
+        } else if (this.body.velocity.y > 3 && this.body.velocity.y < 7) { // 3 is to small but if we add 10 when it is 7 it will be too big so we add only 6
             this.body.velocity.y += 6;
         }
     }
@@ -111,18 +110,10 @@ class Cube
                 this.canJump = false;
             }
         }
-        /*if(keysDown["KeyG"]){
-            //If the player is not currently jumping
-            if(!turtle.grabbed){
-                turtle.grab();
-            } else if (turtle.grabbed) {
-                turtle.ungrab();
-            }
-        }*/
     }
 }
 
-function load_ghost()
+function load_ghost() // Create ghost with all its prperties when calling the player function
 { 
     //Create player object
     player = new Player();
@@ -131,8 +122,10 @@ function load_ghost()
     let objModelUrl = "models/Ghost.obj";
     let mtlModelUrl = "models/Ghost.mtl";
 
+    // Load White ghost figure
     player.load3dModel(objModelUrl, mtlModelUrl);
 
+    // Create a mesh and body to control the movement
     let ghostGeometry = new THREE.BoxGeometry(1, 1, 1);
     let ghostMaterial = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
     let ghostMesh = new THREE.Mesh(ghostGeometry , ghostMaterial);
@@ -140,18 +133,20 @@ function load_ghost()
     playerBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     playerMesh = new Cube(ghostMesh, playerBody, 0.1);
     
-    ghostMesh.position.set( -3, 1, 0 );  //-3, 1, 0
-    playerBody.position.set( -3, 1, 0 ); //-3, 1, 0
+    // Set position at the beginning of the game
+    ghostMesh.position.set( -3, 1, 0 );  
+    playerBody.position.set( -3, 1, 0 ); 
 
-    playerMesh.body.addEventListener("collide",function(e){
+    playerMesh.body.addEventListener("collide",function(e){ // Add interaction when colliding with different objects
 
-        if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
+        // If the turtle is grabbed there has to be changes applied to the turtle as well that will change depending the portal it enters to 
+        if(e.body.tag == portalTag) { // Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){
                 //Set it to false
                 transporthandler = false;
                 toggleSceneHandler();
-                change_scene(scene);
+                change_scene(scene); // Change part of the level, (Go to the past or future)
                 playerBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
@@ -185,18 +180,6 @@ function load_ghost()
                 change_scene(scene);
                 playerBody.position.set( 63, 5, 0 );
                 if(turtle.grabbed){
-                    // Increase turtle size
-                    /*turtle.mesh.geometry.boundingBox.max.x *= 50;
-                    turtle.mesh.geometry.boundingBox.max.y *= 50;
-                    turtle.mesh.geometry.boundingBox.max.z *= 50;
-
-                    turtle.mesh.geometry.boundingBox.min.x *= 50;
-                    turtle.mesh.geometry.boundingBox.min.y *= 50;
-                    turtle.mesh.geometry.boundingBox.min.z *= 50;*/
-
-                    //turtle.mesh.scale.y = 5;
-                    //turtle.mesh.scale.z = 5; 
-
                     
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
                     turtleBody.position.copy(playerBody.position);
@@ -222,6 +205,7 @@ function load_ghost()
                 }
             }
         } 
+        // In the next cases the player will not enter with a turtle
         else if(e.body.tag == (portalTag+4)){ //Level 2 First portal
             
             if(enemies.length == 0){
@@ -253,28 +237,25 @@ function load_ghost()
         else if(e.body.tag == (portalTag+12)){ //WIN
             win();
         }
-        else if(e.body.tag == levelGroundTag || e.body.tag == turtleTag){
+        else if(e.body.tag == levelGroundTag || e.body.tag == turtleTag){ // Th jump is activated when touching the ground or the turtle tags
             playerMesh.canJump = true;
             transporthandler = true;
         }
 
         //If the player touches an enemy or a lava drop, they die
-        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904) || e.body.tag==600) { // Arriba Use body.Tag instead of id
+        else if(e.body.tag >= 2000 || (e.body.tag >= 900 && e.body.tag <= 904) || e.body.tag==600) { // If it touches an object with any of these tags the player dies
             window.cancelAnimationFrame(request);
             death(); 
         }
     });
-
-    //scene.add(playerMesh.mesh);
-
 }
 
-function teleport(position){ // Teleport player to new position
+function teleport(position){ // Teleport player to new position (when touching a portal)
     //If key handler is true
     if(transporthandler){
         //Set it to false
         transporthandler = false;
-        toggleSceneHandler();
+        toggleSceneHandler(); // Change the scene (going to the past and future)
         change_scene(scene);
         playerBody.position.set(position.x, position.y, position.z );
     }
@@ -303,12 +284,13 @@ function teleport_with_turtle(position, meshScale, bodyScale){ // Teleport playe
 //Function to use when the player dies
 function death(){
 
+    //RESET ALL OBJECTS IN THE GAME
     let canvas = document.getElementById("webglcanvas");
     canvas.width = 900; 
     canvas.height = 600;
 
-    clearInterval(lava_interval);
-    clearInterval(portal_interval);
+    clearInterval(lava_interval); // Stop creating lava ellipses
+    clearInterval(portal_interval); // Stop moving the portal
 
     //All elements from the scene are deleted
     while(scene.children.length > 0){ 
@@ -323,6 +305,7 @@ function death(){
 
     sceneHandler = false;
 
+    // Clear arrays that save variables
     enemies = [];
     evil_ghosts = [];
 
@@ -331,7 +314,7 @@ function death(){
 }
 
 //Function to use when the player wins
-function win(){
+function win(){ // Same comments as the death method
 
     let canvas = document.getElementById("webglcanvas");
     canvas.width = 900; 

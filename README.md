@@ -30,3 +30,11 @@ Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroll
         </ul> 
     </li>
 </ul>
+<br/>
+<h1>Diseño de mapas</h1>
+<h3>Nivel 1</h3>
+<img src="./Images/MapsDesign/Level1.jpeg" width="900"> <br />
+<p> La idea de este primer nivel es que el jugador pueda usar los portales para cambiar entre dos dimensiones y poder cruzar los obstáculos en el camino. El jugador no podrá caminar o nadar en el agua por lo que tendrá que ir al pasado donde el agua estará congelada. Ahí encontará una rana la cual le será de utilidad más adelante, ya que tendrá que brincar unos picos los cuales no podrá pasar con un simple salto. Al ir al futuro la rana crece de tamaño, esto le permitirá utilizarla para utilizarla como plataforma y así brincar para llegar al último portal y cruzar al segundo nivel.
+<h3>Nivel 2</h3>
+<img src="./Images/MapsDesign/Level2.png" width="900"> <br />
+En el segundo nivel lo naranja representa lava que el jugador no puede tocar, si lo hace morirá. Tendrá que brincar a través de las plataformas hasta alcanzar los portales. El primer portal lo lleva al futuro donde la lava está congelada. En esa dimensión se enonctrará con fantasmas enemigos que tendrá que esquivar y llegar al portal que lo regresará al pasado. Este lo llevará a la parte de en medio donde habrá un portal con movimiento aleatorio. El jugador tendrá que alcanzarlo para cruzar a la última parte de la misma dimensión, pasar a la siguiente dimensión y finalmente terminar el juego.

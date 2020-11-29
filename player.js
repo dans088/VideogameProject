@@ -137,13 +137,13 @@ function load_ghost()
     let ghostMaterial = new THREE.MeshBasicMaterial( {color: 0xF145FF, opacity: 0.0} );
     let ghostMesh = new THREE.Mesh(ghostGeometry , ghostMaterial);
     //Create player object
-    testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
-    testCube = new Cube(ghostMesh, testCubeBody, 0.1);
+    playerBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
+    playerMesh = new Cube(ghostMesh, playerBody, 0.1);
     
     ghostMesh.position.set( 640, 30, 0 );  //-3, 1, 0
-    testCubeBody.position.set( 640, 30, 0 ); //-3, 1, 0
+    playerBody.position.set( 640, 30, 0 ); //-3, 1, 0
 
-    testCube.body.addEventListener("collide",function(e){
+    playerMesh.body.addEventListener("collide",function(e){
 
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
@@ -152,11 +152,11 @@ function load_ghost()
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 206, 3, 0 );
+                playerBody.position.set( 206, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
-                    turtleBody.position.copy(testCubeBody.position);
+                    turtleBody.position.copy(playerBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
@@ -168,11 +168,11 @@ function load_ghost()
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 6, 3, 0 );
+                playerBody.position.set( 6, 3, 0 );
                 if(turtle.grabbed){
                     
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
-                    turtleBody.position.copy(testCubeBody.position);
+                    turtleBody.position.copy(playerBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
@@ -183,7 +183,7 @@ function load_ghost()
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 63, 5, 0 );
+                playerBody.position.set( 63, 5, 0 );
                 if(turtle.grabbed){
                     // Increase turtle size
                     /*turtle.mesh.geometry.boundingBox.max.x *= 50;
@@ -199,7 +199,7 @@ function load_ghost()
 
                     
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
-                    turtleBody.position.copy(testCubeBody.position);
+                    turtleBody.position.copy(playerBody.position);
                     turtle.turtleObject.scale.set(0.05,0.05,0.05);
                 }
             }
@@ -210,14 +210,14 @@ function load_ghost()
                 transporthandler = false;
                 toggleSceneHandler();
                 change_scene(scene);
-                testCubeBody.position.set( 255, 3, 0 );
+                playerBody.position.set( 255, 3, 0 );
                 if(turtle.grabbed){
                     //Return to orginal size
                     turtle.mesh.scale.x = 1; 
                     turtle.mesh.scale.y = 1;
                     turtle.mesh.scale.z = 1;
                     turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true, true);
-                    turtleBody.position.copy(testCubeBody.position);
+                    turtleBody.position.copy(playerBody.position);
                     turtle.turtleObject.scale.set(0.007,0.007,0.007);
                 }
             }
@@ -254,7 +254,7 @@ function load_ghost()
             win();
         }
         else if(e.body.tag == levelGroundTag || e.body.tag == turtleTag){
-            testCube.canJump = true;
+            playerMesh.canJump = true;
             transporthandler = true;
         }
 
@@ -265,7 +265,7 @@ function load_ghost()
         }
     });
 
-    //scene.add(testCube.mesh);
+    //scene.add(playerMesh.mesh);
 
 }
 
@@ -276,7 +276,7 @@ function teleport(position){ // Teleport player to new position
         transporthandler = false;
         toggleSceneHandler();
         change_scene(scene);
-        testCubeBody.position.set(position.x, position.y, position.z );
+        playerBody.position.set(position.x, position.y, position.z );
     }
 }
 
@@ -287,14 +287,14 @@ function teleport_with_turtle(position, meshScale, bodyScale){ // Teleport playe
         transporthandler = false;
         toggleSceneHandler();
         change_scene(scene);
-        testCubeBody.position.set( position.x, position.y, position.z );
+        playerBody.position.set( position.x, position.y, position.z );
         if(turtle.grabbed){
             //Return to orginal size
             turtle.mesh.scale.x = meshScale; 
             turtle.mesh.scale.y = meshScale;
             turtle.mesh.scale.z = meshScale;
             turtleBody = addPhysicalBody(turtleTag,turtle.mesh, {mass: 1}, true);
-            turtleBody.position.copy(testCubeBody.position);
+            turtleBody.position.copy(playerBody.position);
             turtle.turtleObject.scale.set(bodyScale, bodyScale, bodyScale);
         }
     }

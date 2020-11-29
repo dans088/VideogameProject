@@ -1,7 +1,6 @@
 # TimeAfterTime
 Proyecto Final de la materia "Gráficas Computacionales" TC3022 
 
-```html
 <br/>
 <h1>Descripción</h1>
 Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroller de puzzles y plataformas en el que el objetivo es completar todos los niveles para llegar al final del juego. Para resolver los puzzles el jugador tendrá que usar portales posicionados en distintas partes del mapas y, así, lograr completar las distintas secciones del juego. 
@@ -30,4 +29,3 @@ Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroll
         Nivel 2: 1) saltar hacia el portal sin tocar la lava; 2) saltar hacia el segundo portal que se mueve; 3) evitar fantasmas rojos y llegar al último portal para ganar. 
     </li>
 </ul>
-```

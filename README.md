@@ -1,6 +1,5 @@
 # TimeAfterTime
 Proyecto Final de la materia "Gráficas Computacionales" TC3022 
-
 <br/>
 <h1>Descripción</h1>
 Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroller de puzzles y plataformas en el que el objetivo es completar todos los niveles para llegar al final del juego. Para resolver los puzzles el jugador tendrá que usar portales posicionados en distintas partes del mapas y, así, lograr completar las distintas secciones del juego. 
@@ -24,8 +23,10 @@ Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroll
     <li>Crear mecánica para “saltar” en el tiempo. Es decir, transportar al fantasma a otro escenario previamente cargado vía sus coordenadas en x, y, z. </li>
     <li>Crear una interfaz de usuario al inicio del juego que sirva como menú inicial. Cargar un canvas en html y css. </li>
     <li>Crear una pantalla de Game Over, en caso de que el jugador pierda o de que el jugador gane. Cargar un canvas en html y css. </li>
-    <li>El juego deberá contar con dos secciones, cada una con tres retos  diferentes. 
-        Nivel 1: 1) saltar, sin caer al agua, al portal y aterrizar en hielo en el segundo escenario; 2) saltar con la tortuga las plataformas  hacia el segundo portal; 3) subirse en la tortuga para pasar los picos. 
-        Nivel 2: 1) saltar hacia el portal sin tocar la lava; 2) saltar hacia el segundo portal que se mueve; 3) evitar fantasmas rojos y llegar al último portal para ganar. 
+    <li>El juego deberá contar con dos secciones, cada una con tres retos  diferentes:
+        <ul>
+            <li>Nivel 1: 1) saltar, sin caer al agua, al portal y aterrizar en hielo en el segundo escenario; 2) saltar con la tortuga las plataformas  hacia el segundo portal; 3) subirse en la tortuga para pasar los picos.</li>
+            <li>Nivel 2: 1) saltar hacia el portal sin tocar la lava; 2) saltar hacia el segundo portal que se mueve; 3) evitar fantasmas rojos y llegar al último portal para ganar.</li>
+        </ul> 
     </li>
 </ul>

@@ -319,12 +319,11 @@ function run() {
         
     }
 
-    //If the lava ellipses have been created
+    // Attach lava ellipses mesh to body
     if(lava_ellipses.length > 0){
-        //For each drop of lava
-        lava_ellipses.forEach(ellipse => {
-            // Attach lava ellipses mesh to their body
-            ellipse.mesh.position.copy(ellipse.body.position);
+        lava_ellipses.forEach(lava_ellipse => {
+            lava_ellipse.lava_object.mesh.position.copy(lava_ellipse.lava_object.body.position);
+            lava_ellipse.lava_light.position.copy(lava_ellipse.lava_object.mesh.position); // Attach lava to its mesh
         })
     }
 
@@ -411,7 +410,7 @@ async function scene_setup(canvas)
 
     // Add  a camera 
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
-    camera.position.set(0, 20, 50);    
+    camera.position.set(0, 10, 50);    
    
     //Create the player character
     await load_ghost();

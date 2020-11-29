@@ -176,7 +176,9 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     }
     else if(type=="lava"){
         lavabody = addPhysicalBody(903+lava_counter, ground, {mass: 0}, true);
-        //body2mesh(lavabody,true);
+        let light = new THREE.PointLight( 0xFA7726, 100.0, 100);
+        light.position.set(groundPosition.x, groundPosition.y, groundPosition.z);
+        scene.add(light);
         scene.add(ground);
         lava_counter+=1;
     }
@@ -312,10 +314,12 @@ function create_lava(){
         let ellipse_mesh = new THREE.Mesh( geometry, materials.lava );
         
         if(ellipse_mesh != null){
+            let light = new THREE.PointLight( 0xBB2B2B, 10.0);
             ellipse_mesh.position.set(x, 40, 0 );
             let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true);
             ellipse = {mesh: ellipse_mesh , body: ellipse_body}
-            lava_ellipses.push(ellipse);
+            lava_ellipse = {lava_object: ellipse, lava_light: light};
+            lava_ellipses.push(lava_ellipse);
             scene.add(ellipse_mesh);
             counter++;
         }

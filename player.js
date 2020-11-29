@@ -141,7 +141,7 @@ function load_ghost()
     playerMesh = new Cube(ghostMesh, playerBody, 0.1);
     
     ghostMesh.position.set( -3, 1, 0 );  //-3, 1, 0
-    testCubeBody.position.set( -3, 1, 0 ); //-3, 1, 0
+    playerBody.position.set( -3, 1, 0 ); //-3, 1, 0
 
     playerMesh.body.addEventListener("collide",function(e){
 

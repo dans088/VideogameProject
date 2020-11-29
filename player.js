@@ -23,7 +23,6 @@ class Player
         mtlLoader.load(mtlModelUrl, materials =>{
             
             materials.preload();
-            //console.log(materials);
 
             objLoader = new THREE.OBJLoader();
             
@@ -34,7 +33,7 @@ class Player
                 object.rotation.y = Math.PI/2;
                 object.scale.set(0.2, 0.2, 0.2);
                 this.playerObject = object;
-                //console.log("Player", this.playerObject);
+               
                 scene.add(object);
             });
             
@@ -140,9 +139,6 @@ function load_ghost()
 
     testCube.body.addEventListener("collide",function(e){
 
-        console.log(e.body.tag);
-
-        // console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA", console.log(e.body.tag))
         if(e.body.tag == portalTag) { // Arriba Use body.Tag instead of id
             //If key handler is true
             if(transporthandler){

@@ -50,32 +50,6 @@ let pastUrl = "Images/past_texture.jpg";
 let futureTexture = new THREE.TextureLoader().load(futureUrl);
 let pastTexture = new THREE.TextureLoader().load(pastUrl);
 
-
-//Materials to be used on meshes
-materials = {
-    level1: new THREE.MeshBasicMaterial({
-        color: 0x00ff00
-    }),
-    water: new THREE.MeshBasicMaterial({
-        color: 0x33DEF9
-    }),
-    orange: new THREE.MeshBasicMaterial({
-        color: 0xFFB841
-    }),
-    blue: new THREE.MeshBasicMaterial({
-        color: 0x5BA7D3
-    }),
-    purple: new THREE.MeshBasicMaterial({
-        color: 0xA071F1
-    }),
-    red: new THREE.MeshBasicMaterial({
-        color: 0xCE1343
-    }),
-    light_blue: new THREE.MeshBasicMaterial({
-        color: 0x53C3D3
-    }),
-};
-
 let portalduration = 5000; // ms
 let currentTime = Date.now();
 
@@ -165,30 +139,6 @@ function animate()
 
     world.step(1/60);
 
-    // console.log(world.contacts);
-    //console.log(testCube.canJump)
-
-    world.contacts.forEach(function (contact) {
-        // console.log(contact);
-        // console.log("BI", contact.bi.id)
-        // console.log("BJ", contact.bj.id)
-        // if(contact.bi.id == 2 ){
-        //     player.body.position.set(17,1,0)
-        // }
-        // if (contact.bi.id == 1){
-        //     console.log("Bi: 11111111111111111111")
-        // } else if (contact.bi.id == 2){
-        //     console.log("Bi: 222222222222222222")
-        // } else if (contact.bi.id == 0){
-        //     console.log("Bi: 000000000000000000")
-        // } else if (contact.bi.id == 3){
-        //     console.log("Bi: 333333333333333")
-        // } else if (contact.bi.id == 4){
-        //     console.log("Bi: 4444444444444444444")
-        // } 
-        
-    })
-
 }
 
 //Run function
@@ -265,12 +215,6 @@ function run() {
         if(!turtle.grabAnimations){
             KF.update();
         }
-        /*
-        console.log("Grab", turtle.grabbed);
-        console.log("Body", turtleBody.position.x);
-        console.log("cubeBody", testCubeBody.position.x);
-        console.log("Distance", distance);
-        */
 
         if(turtle.grabbed && turtleBody.position.x > testCubeBody.position.x && distance < 3){
             turtle.grabAnimations=true;
@@ -404,7 +348,7 @@ async function scene_setup(canvas)
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 1000 );
-    camera.position.set(0, 20, 100);    
+    camera.position.set(0, 20, 50);    
     // camera.position.set(0, 0, 30); 
     //Create the player character
     await load_ghost();

@@ -182,5 +182,5 @@ function load_turtle()
 
     turtleMesh.position.set( 206, 10, 0 );
     turtleBody.position.set( 206, 10, 0 );
-    scene.add(turtle.mesh);
+    //scene.add(turtle.mesh);
 }

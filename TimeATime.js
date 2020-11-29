@@ -26,7 +26,7 @@ turtleBody = null;
 transporthandler = true;
 sceneHandler = false; //boolean to change scene background
 request=null;
-ykeyhandler = true; // Allow to change value when keypress
+keyhandler = true; // Allow to change value when keypress
 
 let lava_interval = null; //Variable for the interval that makes lava appear randomly
 let portal_interval = null; //Variable for the interval that makes the portal move

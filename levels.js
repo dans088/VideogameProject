@@ -45,16 +45,16 @@ const blackstonetexture = new THREE.TextureLoader().load( "./Images/blackStoneTe
 
 //Materials to be used on meshes
 materials = {
-    water: new THREE.MeshBasicMaterial({
+    water: new THREE.MeshPhongMaterial({
         map: watertexture
     }),
-    ice: new THREE.MeshBasicMaterial({
+    ice: new THREE.MeshPhongMaterial({
         map: icetexture
     }),
-    stone: new THREE.MeshBasicMaterial({
+    stone: new THREE.MeshPhongMaterial({
         map: stonetexture
     }),
-    mossStone: new THREE.MeshBasicMaterial({
+    mossStone: new THREE.MeshPhongMaterial({
         map: mossStonetexture
     }),
     blackstone: new THREE.MeshBasicMaterial({
@@ -168,9 +168,11 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     let gGeometry = new THREE.BoxGeometry(groundGeometry.x, groundGeometry.y, groundGeometry.z);
     ground = new THREE.Mesh( gGeometry, material );
     ground.position.set(groundPosition.x, groundPosition.y, groundPosition.z);
+    ground.receiveShadow = true;
     level1Grounds.push(ground);
-
+    
     if(type=="ground"){
+    
         addPhysicalBody(levelGroundTag, ground, {mass: 0}, true);
         scene.add(ground);
     }
@@ -183,6 +185,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
         lava_counter+=1;
     }
     else if(type=="water"){
+        
         lavabody = addPhysicalBody(levelGroundTag, ground, {mass: 0}, false);
         //body2mesh(lavabody,true);
         scene.add(ground);

@@ -186,7 +186,7 @@ function run() {
         camera.lookAt(player.playerObject.position);
         //And the camera follows the player at the x and y  coordinate
         camera.position.x = player.playerObject.position.x;
-        camera.position.y = player.playerObject.position.y;
+        camera.position.y = player.playerObject.position.y + 3;
         //The position of the player character needs to be the same as the position of their cannon body. To follow the physics of the world
         player.playerObject.position.copy(playerBody.position);
         //Increase the position of the player character so it doesn't clip with the ground
@@ -397,14 +397,18 @@ async function scene_setup(canvas)
 
     // Create a directional light
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
-    directionalLight.position.set(0, 1, 2);
+    directionalLight.position.set(0, 50, 100);
+
     //Make it cast shadows
     directionalLight.castShadow = true;
+
+    //Add the light to the scene
+    scene.add(directionalLight);
+ 
+
     //Set the map size for the shadows
     directionalLight.shadow.mapSize.width = SHADOW_MAP_WIDTH;
     directionalLight.shadow.mapSize.height = SHADOW_MAP_HEIGHT;
-    //Add the light to the scene
-    scene.add(directionalLight);
 
     //Activate the key listeners
     keyEvents();

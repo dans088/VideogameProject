@@ -86,7 +86,9 @@
 
 		init(canvas);
 		innitCannon();
+	
 		scene_setup(canvas);
+
 
 		// Run the run loop
 		run();
@@ -114,11 +116,16 @@
 
 	//Function that stops the title screen music from playing
 	function stopMenuMusic(){
-		var music = document.getElementById('menuMusic');
-		if(music!=null){
+		var music = document.getElementById('music');
+		if(music != null)
 			music.pause();
-			music.currentTime = 0;
-		}
+	}
+	
+	//Function that stops the title screen music from playing
+	function PlayMenuMusic(){
+		var music = document.getElementById('music');
+		if(music != null)
+			music.play();
 	}
 
 	//Function that displays or removes the game over screen
@@ -148,19 +155,19 @@
 	<div id="container">
 
 		<!--Background music https://www.bensound.com/bensound-music/bensound-sadday.mp3 -->
-		<!--
+		
 		<div id="menuMusic"> 
-			<audio autoplay loop>
+			<audio id = "music"autoplay loop>
 			<source src="music/bensound-sadday.mp3" type="audio/mp3">
 			</audio>
 		</div>
-		-->
+		
 
 		<!--Main Menu-->
 		<div id="menu">
 			<h1 id="title">Time after Time</h1>
 			<button id="instructionsButton" onclick="toggleMenu(), toggleInstructions()">Instructions</button>
-			<button id="startGameButton" onclick="toggleMenu(),stopMenuMusic(),startGame()">Start Game</button>
+			<button id="startGameButton" onclick="toggleMenu(), stopMenuMusic(), startGame()">Start Game</button>
 		</div>
 
 		<!--Instructions Menu-->
@@ -177,13 +184,13 @@
 		<div id="gameOverScreen" style="display: none;">
 			<h1 id="titleGameOver">Game over</h1>
 			<button id="tryAgainButton" onclick="toggleGameOver(),startGame()">Try again</button>
-			<button id="startGameButton" onclick="toggleGameOver(),toggleMenu()">Main menu</button>
+			<button id="startGameButton" onclick="PlayMenuMusic(), toggleGameOver(), toggleMenu()">Main menu</button>
 		</div>
 
 		<!--Win screen-->
 		<div id="winScreen" style="display: none;">
 			<h1 id="titleGameOver">You Won</h1>
-			<button id="startGameButton" onclick="toggleWin(),toggleMenu()">Main menu</button>
+			<button id="startGameButton" onclick="PlayMenuMusic(), toggleWin(), toggleMenu()">Main menu</button>
 		</div>
 
 		<canvas id="webglcanvas" width="900" height="600" style = "background-color: black;"></canvas>

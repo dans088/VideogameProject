@@ -11,7 +11,7 @@ class Enemy
     {
         const materials = new THREE.MeshPhongMaterial( {color: 0xD63030} );
 
-        console.log(materials);
+        //console.log(materials);
 
         objLoader = new THREE.OBJLoader();
 
@@ -26,7 +26,7 @@ class Enemy
             } );
 
             evil_ghosts.push(object);
-            console.log("array", evil_ghosts);
+            //console.log("array", evil_ghosts);
             object.position.set(this.x, this.y, this.z);
             object.scale.set(0.5, 0.5, 0.5);
             scene.add(object);

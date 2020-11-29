@@ -184,8 +184,9 @@ function run() {
 
         //Make the camera look at the player
         camera.lookAt(player.playerObject.position);
-        //And the camera follows the player at the x coordinate
+        //And the camera follows the player at the x and y  coordinate
         camera.position.x = player.playerObject.position.x;
+        camera.position.y = player.playerObject.position.y;
         //The position of the player character needs to be the same as the position of their cannon body. To follow the physics of the world
         player.playerObject.position.copy(playerBody.position);
         //Increase the position of the player character so it doesn't clip with the ground

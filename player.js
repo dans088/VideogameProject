@@ -323,7 +323,8 @@ function death(){
 
     sceneHandler = false;
 
-    enemies = []
+    enemies = [];
+    evil_ghosts = [];
 
     //Toggle the game over screen
     toggleGameOver();
@@ -354,7 +355,8 @@ function win(){
 
     sceneHandler = false;
 
-    enemies = []
+    enemies = [];
+    evil_ghosts = [];
 
     //Toggle the game over screen
     toggleWin();

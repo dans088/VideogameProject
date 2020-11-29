@@ -197,16 +197,16 @@ function create_enemies(){
     let counter = 900;
     
     positions_x.forEach(position_x => {
-        //Create Portal mesh
+        //Create Ghost mesh
         let geometry = new THREE.SphereGeometry(0.7, 36, 36);
         let enemy_mesh = new THREE.Mesh(geometry, materials.red);
         enemy_mesh.position.set( position_x, 29.6, 0 );
-        //Create portal cannon body
+        //Create ghost cannon body
         enemy_body = addPhysicalBody(counter, enemy_mesh, {mass: 0}, false);
         enemy_body.velocity.x = 1;
         enemy = {mesh: enemy_mesh, body: enemy_body}
         enemies.push(enemy);
-        //Add portal to scene
+        //Add ghost to scene
         scene.add(enemy_mesh);
         counter++;
     })

@@ -29,9 +29,9 @@ class Player
             objLoader.setMaterials(materials);
 
             objLoader.load(objModelUrl, object=>{
-                object.position.y = 0;
-                object.rotation.y = Math.PI/2;
-                object.scale.set(0.2, 0.2, 0.2);
+                object.position.y = 0.5;
+                //object.rotation.y = Math.PI/2;
+                object.scale.set(0.5, 0.5, 0.5);
                 this.playerObject = object;
                
                 scene.add(object);
@@ -134,8 +134,8 @@ function load_ghost()
     testCubeBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     testCube = new Cube(ghostMesh, testCubeBody, 0.1);
     
-    ghostMesh.position.set( -3, 1, 0 );
-    testCubeBody.position.set( -3, 1, 0 );
+    ghostMesh.position.set( 640, 30, 0 );  //-3, 1, 0
+    testCubeBody.position.set( 640, 30, 0 ); //-3, 1, 0
 
     testCube.body.addEventListener("collide",function(e){
 
@@ -227,7 +227,7 @@ function load_ghost()
             teleport({x: 593, y: 31.3, z: 0});
         }
         else if(e.body.tag == (portalTag+6)){ //Portal with movement -> Third Portal First Part
-            teleport({x: 457, y: 2.5, z: 0});
+            teleport({x: 460, y: 3, z: 0});
         }
         else if(e.body.tag == (portalTag+7)){ // First Portal Second part
             teleport({x: 395, y: 32, z: 0});
@@ -259,7 +259,7 @@ function load_ghost()
         }
     });
 
-    scene.add(testCube.mesh);
+    //scene.add(testCube.mesh);
 
 }
 
@@ -314,7 +314,6 @@ function death(){
     while(world.bodies.length > 0){ 
         world.remove(world.bodies[0]); 
     }
-    world=null;
 
     sceneHandler = false;
 

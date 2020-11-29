@@ -1,4 +1,40 @@
+class Enemy
+{
+    constructor(x, y, z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
+
+    
+    async load3dModel(objModelUrl, evil_ghosts)
+    {
+        const materials = new THREE.MeshPhongMaterial( {color: 0xD63030} );
+
+        console.log(materials);
+
+        objLoader = new THREE.OBJLoader();
+
+        await objLoader.load(objModelUrl, object=>{
+
+            object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.material = materials;
+                }
+            } );
+
+            evil_ghosts.push(object);
+            console.log("array", evil_ghosts);
+            object.position.set(this.x, this.y, this.z);
+            object.scale.set(0.5, 0.5, 0.5);
+            scene.add(object);
+        });
+        
+    }
+    
+}
 
 const mossStonetexture = new THREE.TextureLoader().load( "./Images/mossStoneTexture.jpg" );
 const stonetexture = new THREE.TextureLoader().load( "./Images/stoneTexture.jpg" );
@@ -236,18 +272,22 @@ function create_enemies(){
 
     let positions_x = [664, 666, 668];
     let counter = 900;
+
+    let objModelUrl = "models/Ghost.obj";
     
     positions_x.forEach(position_x => {
-        //Create Portal mesh
+        //Create Evil Ghost mesh
+        let evil_ghost = new Enemy(position_x, 29.6, 0);
+        evil_ghost.load3dModel(objModelUrl, evil_ghosts);
         let geometry = new THREE.SphereGeometry(0.7, 36, 36);
-        let enemy_mesh = new THREE.Mesh(geometry, materials.red);
+        let enemy_mesh = new THREE.Mesh(geometry, {transparent:true});
         enemy_mesh.position.set( position_x, 29.6, 0 );
-        //Create portal cannon body
+        //Create Evil Ghost cannon body
         enemy_body = addPhysicalBody(counter, enemy_mesh, {mass: 0}, false);
         enemy_body.velocity.x = 1;
         enemy = {mesh: enemy_mesh, body: enemy_body}
         enemies.push(enemy);
-        //Add portal to scene
+        //Add Evil Ghost to scene
         scene.add(enemy_mesh);
         counter++;
     })

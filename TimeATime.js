@@ -39,6 +39,7 @@ lava_ellipses = [];
 
 // Save enemies of second level, second part
 enemies = [];
+evil_ghosts = []; //array for red ghosts models
 enemiesMoveLeft = true; // Enemies should move left or right
 
 // Portal object and movement options across X and Y axis
@@ -167,6 +168,7 @@ function run() {
         camera.position.x = player.playerObject.position.x;
         //The position of the player character needs to be the same as the position of their cannon body
         player.playerObject.position.copy(testCubeBody.position);
+        player.playerObject.position.y += 1;
         //The position of the player character needs to be the same as the position of their cannon body
         testCube.mesh.position.copy(testCubeBody.position);
 
@@ -202,6 +204,18 @@ function run() {
                 }
                 enemy.mesh.position.copy(enemy.body.position);
             })
+            //loop for red ghost models movement
+            
+            if(evil_ghosts.length == 3)
+            {
+                //console.log("enemy", evil_ghosts);
+                evil_ghosts.forEach((enemy, index) => {
+                    //console.log("enemy", enemy);
+                    enemy.position.copy(enemies[index].body.position);
+                    enemy.position.y += 1;
+                })
+            }
+            
         }
     }
     

@@ -17,6 +17,8 @@ playerBody = null; //Object for the cannon body of the player
 world = null; //Object for the cannon world
 request=null; //Request animation frame. To stop the run function (the next request) when the player dies or wins
 
+let SHADOW_MAP_WIDTH = 4096, SHADOW_MAP_HEIGHT = 4096; //Shadow map sizes
+
 //turtle
 turtle = null; //turtle class
 group = null; //Object for the turtle
@@ -393,11 +395,15 @@ async function scene_setup(canvas)
     //Add the image background to the scene
     change_scene(scene);
 
-    // Add a directional light
+    // Create a directional light
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
     directionalLight.position.set(0, 1, 2);
     //Make it cast shadows
     directionalLight.castShadow = true;
+    //Set the map size for the shadows
+    directionalLight.shadow.mapSize.width = SHADOW_MAP_WIDTH;
+    directionalLight.shadow.mapSize.height = SHADOW_MAP_HEIGHT;
+    //Add the light to the scene
     scene.add(directionalLight);
 
     //Activate the key listeners

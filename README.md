@@ -30,3 +30,5 @@ Creamos un videojuego llamado Time After Time. Este juego es un 2.5 D sidescroll
         </ul> 
     </li>
 </ul>
+<br/>
+<h1>Diseño de mapas</h1>

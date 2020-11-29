@@ -26,6 +26,7 @@ turtleBody = null;
 transporthandler = true;
 sceneHandler = false; //boolean to change scene background
 request=null;
+ykeyhandler = true; // Allow to change value when keypress
 
 let lava_interval = null; //Variable for the interval that makes lava appear randomly
 let portal_interval = null; //Variable for the interval that makes the portal move
@@ -109,8 +110,6 @@ function init(canvas) //Make canvas full length of screen
 
 //Listeners for the movement of the player
 function keyEvents(){
-
-    var keyhandler = true;
 
     document.addEventListener("keyup", event=>{
         keysDown[event.code] = false;

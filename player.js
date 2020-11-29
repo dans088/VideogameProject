@@ -140,8 +140,8 @@ function load_ghost()
     playerBody = addPhysicalBody(playerTag,ghostMesh, {mass: 1}, true)
     playerMesh = new Cube(ghostMesh, playerBody, 0.1);
     
-    ghostMesh.position.set( 640, 30, 0 );  //-3, 1, 0
-    playerBody.position.set( 640, 30, 0 ); //-3, 1, 0
+    ghostMesh.position.set( -3, 1, 0 );  //-3, 1, 0
+    testCubeBody.position.set( -3, 1, 0 ); //-3, 1, 0
 
     playerMesh.body.addEventListener("collide",function(e){
 

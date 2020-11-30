@@ -57,7 +57,7 @@ materials = {
     mossStone: new THREE.MeshPhongMaterial({
         map: mossStonetexture
     }),
-    blackstone: new THREE.MeshBasicMaterial({
+    blackstone: new THREE.MeshPhongMaterial({
         map: blackstonetexture
     }),
     lava: new THREE.MeshBasicMaterial({
@@ -174,7 +174,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     }
     else if(type=="lava"){ // The user dies when touching lava, the lava contains a pont light
         lavabody = addPhysicalBody(903+lava_counter, ground, {mass: 0}, true);
-        let light = new THREE.PointLight( 0xFA7726, 100.0, 100);
+        let light = new THREE.PointLight( 0xFA7726, 100.0, 1);
         light.position.set(groundPosition.x, groundPosition.y, groundPosition.z);
         scene.add(light);
         scene.add(ground);
@@ -313,7 +313,7 @@ function create_lava(){ // Create 3 lava ellipses that fall from sky in second l
         let ellipse_mesh = new THREE.Mesh( geometry, materials.lava );
         
         if(ellipse_mesh != null){
-            let light = new THREE.PointLight( 0xBB2B2B, 10.0); // Color and intensity as parameters
+            let light = new THREE.PointLight( 0xBB2B2B, 1); // Color and intensity as parameters
             ellipse_mesh.position.set(x, 40, 0 );
             let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true);
             ellipse = {mesh: ellipse_mesh , body: ellipse_body}

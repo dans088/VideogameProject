@@ -134,8 +134,8 @@ function load_ghost() // Create ghost with all its prperties when calling the pl
     playerMesh = new Cube(ghostMesh, playerBody, 0.1);
     
     // Set position at the beginning of the game
-    ghostMesh.position.set( -3, 1, 0 );  
-    playerBody.position.set( -3, 1, 0 ); 
+    ghostMesh.position.set( 405, 1, 0 );  
+    playerBody.position.set( 405, 1, 0 ); 
 
     playerMesh.body.addEventListener("collide",function(e){ // Add interaction when colliding with different objects
 

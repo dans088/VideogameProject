@@ -174,7 +174,7 @@ function create_ground(groundGeometry, groundPosition, material, type="ground"){
     }
     else if(type=="lava"){ // The user dies when touching lava, the lava contains a pont light
         lavabody = addPhysicalBody(903+lava_counter, ground, {mass: 0}, true);
-        let light = new THREE.PointLight( 0xFA7726, 100.0, 1);
+        let light = new THREE.PointLight( 0xFA7726, 100.0, 10);
         light.position.set(groundPosition.x, groundPosition.y, groundPosition.z);
         scene.add(light);
         scene.add(ground);
@@ -192,7 +192,7 @@ function create_trap(position){ // Create Peaks that kill the user on the first 
     let finalPoistion = (0.4 * 2 * 20) + position.x; // Create 20 peaks with 0.4 as radius
     for(let i = position.x; i< finalPoistion; i += 0.8){
         const geometry = new THREE.ConeGeometry( 0.4, 3, 10 );
-        const material = new THREE.MeshBasicMaterial( materials.blackstone );
+        const material = materials.blackstone;
         const cone = new THREE.Mesh( geometry, material );
         cone.position.set(i, position.y, position.z)
         addPhysicalBody(600, cone, {mass: 0}, true); // Add a tag of 600 to each body
@@ -313,7 +313,7 @@ function create_lava(){ // Create 3 lava ellipses that fall from sky in second l
         let ellipse_mesh = new THREE.Mesh( geometry, materials.lava );
         
         if(ellipse_mesh != null){
-            let light = new THREE.PointLight( 0xBB2B2B, 1); // Color and intensity as parameters
+            let light = new THREE.PointLight( 0xFA7726, 100); // Color and intensity as parameters
             ellipse_mesh.position.set(x, 40, 0 );
             let ellipse_body = addPhysicalBody(counter, ellipse_mesh, {mass: 0.1}, true);
             ellipse = {mesh: ellipse_mesh , body: ellipse_body}
